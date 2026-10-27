@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://akinozgen.github.io/datagrids/protocol/v1/request.schema.json",
+  "title": "datagrids protocol v1: request",
+  "description": "Request body of the datagrids protocol v1 (POST, application/json). Unknown members must be ignored by servers, so additional properties are allowed everywhere.",
+  "type": "object",
+  "required": ["v", "page"],
+  "properties": {
+    "v": {
+      "description": "Protocol major version.",
+      "const": 1
+    },
+    "page": {
+      "description": "Requested page. Numbers are 1-based.",
+      "type": "object",
+      "required": ["size", "number"],
+      "properties": {
+        "size": { "type": "integer", "minimum": 1 },
+        "number": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "sort": {
+      "description": "Sort keys in priority order. Empty or missing: the server's default order.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/sort" }
+    },
+    "q": {
+      "description": "Global search text. Omitted when empty.",
+      "type": "string"
+    },
+    "filters": {
+      "description": "Typed filters by field key. All filters must match (AND).",
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/filter" }
+    },
+    "fields": {
+      "description": "Field keys the client renders. The server returns these (that it knows) plus `id`.",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "count": {
+      "description": "Counting the client asks for. Missing means \"exact\".",
+      "enum": ["exact", "estimate", "none"]
+    },
+    "requestId": {
+      "description": "Client correlation id. The server may echo it; clients never rely on it for ordering.",
+      "type": "string",
+      "maxLength": 128
+    },
+    "params": {
+      "description": "Page-specific parameters that are not typed filters. Server-defined.",
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "sort": {
+      "type": "object",
+      "required": ["key", "dir"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "dir": { "enum": ["asc", "desc"] }
+      }
+    },
+    "scalar": {
+      "type": ["string", "number", "boolean"]
+    },
+    "orderable": {
+      "description": "Numbers, or strings for dates (ISO 8601) and decimals.",
+      "type": ["string", "number"]
+    },
+    "filter": {
+      "type": "object",
+      "required": ["op"],
+      "properties": {
+        "op": {
+          "enum": [
+            "eq", "ne", "gt", "gte", "lt", "lte", "between", "in", "notIn",
+            "contains", "notContains", "starts", "ends", "empty", "notEmpty"
+          ]
+        },
+        "value": true
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "op": { "enum": ["eq", "ne"] } } },
+          "then": { "required": ["value"], "properties": { "value": { "$ref": "#/$defs/scalar" } } }
+        },
+        {
+          "if": { "properties": { "op": { "enum": ["gt", "gte", "lt", "lte"] } } },
+          "then": { "required": ["value"], "properties": { "value": { "$ref": "#/$defs/orderable" } } }
+        },
+        {
+          "if": { "properties": { "op": { "const": "between" } } },
+          "then": {
+            "required": ["value"],
+            "properties": {
+              "value": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/$defs/orderable" } }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "op": { "enum": ["in", "notIn"] } } },
+          "then": {
+            "required": ["value"],
+            "properties": { "value": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/scalar" } } }
+          }
+        },
+        {
+          "if": { "properties": { "op": { "enum": ["contains", "notContains", "starts", "ends"] } } },
+          "then": { "required": ["value"], "properties": { "value": { "type": "string" } } }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,3 @@
+/* ---------- SEÇİM (selection modülü) ---------- */
+/* çubuktaki yardımcı metin ("0 seçili" ipucu, "2 tanesi görünmüyor") sayaçtan geri planda kalır */
+.dg-bulk-hint { color: var(--dg-muted-fg); }

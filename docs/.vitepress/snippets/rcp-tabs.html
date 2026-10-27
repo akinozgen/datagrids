@@ -1,0 +1,22 @@
+<style>
+  #rcp-tabs-list [aria-selected="true"] { border-color: var(--vp-c-brand-1); color: var(--vp-c-brand-1); }
+  #rcp-tabs-dialog { inline-size: min(720px, 92vw); padding: 20px; border: 1px solid var(--vp-c-divider); border-radius: 12px; background: var(--vp-c-bg); color: var(--vp-c-text-1); }
+  #rcp-tabs-dialog::backdrop { background: rgb(0 0 0 / 0.4); }
+</style>
+<div class="demo-buttons" id="rcp-tabs-list" role="tablist" aria-label="Agent views">
+  <button type="button" role="tab" aria-selected="true" aria-controls="rcp-tabs-p1">Overview</button>
+  <button type="button" role="tab" aria-selected="false" aria-controls="rcp-tabs-p2">Agents</button>
+  <button type="button" id="rcp-tabs-open">Open dialog…</button>
+</div>
+<div id="rcp-tabs-p1" role="tabpanel">
+  <div class="demo-output">The agents grid lives in the second tab. Check the Request tab: nothing has been sent yet.</div>
+</div>
+<div id="rcp-tabs-p2" role="tabpanel" hidden>
+  <table id="rcp-tabs"></table>
+</div>
+<dialog id="rcp-tabs-dialog" aria-labelledby="rcp-tabs-dialog-title">
+  <strong id="rcp-tabs-dialog-title">Pending agents</strong>
+  <table id="rcp-tabs-dialog-grid"></table>
+  <form method="dialog" class="demo-buttons"><button>Close</button></form>
+</dialog>
+<pre class="demo-output" id="rcp-tabs-log" aria-live="polite">Log:</pre>

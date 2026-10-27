@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://akinozgen.github.io/datagrids/protocol/v1/response.schema.json",
+  "title": "datagrids protocol v1: response",
+  "description": "Successful response body of the datagrids protocol v1 (HTTP 2xx, application/json). Unknown members must be ignored by clients, so additional properties are allowed everywhere.",
+  "type": "object",
+  "required": ["v", "rows", "page", "count"],
+  "properties": {
+    "v": {
+      "description": "Protocol major version.",
+      "const": 1
+    },
+    "rows": {
+      "description": "The page of rows, in the requested order.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/row" }
+    },
+    "page": {
+      "description": "The page the server actually returned.",
+      "type": "object",
+      "required": ["size", "number", "hasMore"],
+      "properties": {
+        "size": { "type": "integer", "minimum": 1 },
+        "number": { "type": "integer", "minimum": 1 },
+        "hasMore": { "type": "boolean" }
+      }
+    },
+    "count": { "$ref": "#/$defs/count" },
+    "meta": { "$ref": "#/$defs/meta" },
+    "requestId": {
+      "description": "Echo of the request's requestId (optional).",
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "row": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "description": "Stable, unique row identity. Clients compare ids as strings.",
+          "type": ["string", "integer"]
+        }
+      }
+    },
+    "count": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": { "enum": ["exact", "estimate", "none"] },
+        "total": { "type": "integer", "minimum": 0 },
+        "filtered": { "type": "integer", "minimum": 0 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "enum": ["exact", "estimate"] } } },
+          "then": { "required": ["filtered"] }
+        },
+        {
+          "if": { "properties": { "mode": { "const": "none" } } },
+          "then": { "not": { "anyOf": [{ "required": ["total"] }, { "required": ["filtered"] }] } }
+        }
+      ]
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "aggregates": {
+          "description": "Aggregates over every filtered row, by field key, then by function.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "sum": { "$ref": "#/$defs/number" },
+              "avg": { "$ref": "#/$defs/number" },
+              "min": { "$ref": "#/$defs/number" },
+              "max": { "$ref": "#/$defs/number" },
+              "count": { "type": "integer", "minimum": 0 }
+            },
+            "additionalProperties": { "$ref": "#/$defs/number" }
+          }
+        },
+        "facets": {
+          "description": "Filter options by field key.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["value"],
+              "properties": {
+                "value": { "type": ["string", "number", "boolean"] },
+                "label": { "type": "string" },
+                "count": { "type": "integer", "minimum": 0 }
+              }
+            }
+          }
+        },
+        "warnings": {
+          "description": "Non-fatal notes, e.g. a clamped page size.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code"],
+            "properties": {
+              "code": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+              "message": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "number": {
+      "description": "A JSON number, or a decimal string when precision matters (money).",
+      "anyOf": [
+        { "type": "number" },
+        { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" }
+      ]
+    }
+  }
+}

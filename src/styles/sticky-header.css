@@ -1,0 +1,11 @@
+/* ---------- stickyHeader: cloned header bar (page-level sticky) ---------- */
+.dg-sticky-bar {
+  position: fixed;
+  z-index: calc(var(--dg-z-overlay) + 10);
+  overflow: hidden;
+  background: var(--dg-head-bg);
+  box-shadow: var(--dg-shadow-stuck);
+}
+.dg-sticky-inner { overflow: hidden; }
+.dg-sticky-inner > .dg-table { display: table; margin: 0; border-collapse: separate; }
+@media print { .dg-sticky-bar { display: none; } }

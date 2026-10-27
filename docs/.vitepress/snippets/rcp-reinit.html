@@ -1,0 +1,30 @@
+<div class="demo-buttons">
+  <button type="button" id="rcp-reinit-get">Datagrid.get()</button>
+  <button type="button" id="rcp-reinit-destroy">destroy()</button>
+  <button type="button" id="rcp-reinit-upgrade">upgrade()</button>
+  <button type="button" id="rcp-reinit-remount">remount()</button>
+</div>
+<div id="rcp-reinit-wrap">
+  <table id="rcp-reinit" class="inventory" data-datagrid="rcp-inventory"
+         data-dg-label="Unit inventory" data-dg-page-size="5" data-dg-sort="qty:desc">
+    <thead>
+      <tr>
+        <th data-dg-key="code">Code</th>
+        <th data-dg-key="item">Item</th>
+        <th data-dg-key="unit">Unit</th>
+        <th data-dg-key="qty" data-dg-type="number">Qty</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="rcp-inv-1"><td>INV-001</td><td>Green Herb</td><td>R.P.D.</td><td>42</td></tr>
+      <tr id="rcp-inv-2"><td>INV-002</td><td>Red Herb</td><td>R.P.D.</td><td>7</td></tr>
+      <tr id="rcp-inv-3"><td>INV-003</td><td>Ink Ribbon</td><td>S.T.A.R.S. Alpha</td><td>18</td></tr>
+      <tr id="rcp-inv-4"><td>INV-004</td><td>First Aid Spray</td><td>S.T.A.R.S. Bravo</td><td>5</td></tr>
+      <tr id="rcp-inv-5"><td>INV-005</td><td>Handgun Ammo</td><td>R.P.D.</td><td>240</td></tr>
+      <tr id="rcp-inv-6"><td>INV-006</td><td>Shotgun Shells</td><td>S.T.A.R.S. Alpha</td><td>64</td></tr>
+      <tr id="rcp-inv-7"><td>INV-007</td><td>Blue Herb</td><td>Umbrella Corp.</td><td>11</td></tr>
+      <tr id="rcp-inv-8"><td>INV-008</td><td>Flash Grenade</td><td>B.S.A.A.</td><td>9</td></tr>
+    </tbody>
+  </table>
+</div>
+<pre class="demo-output" id="rcp-reinit-log" aria-live="polite"></pre>

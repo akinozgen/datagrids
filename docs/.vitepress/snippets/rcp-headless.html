@@ -1,0 +1,23 @@
+<div class="demo-form">
+  <label>Search
+    <input id="rcp-hl-q" type="search" placeholder="Name, unit…">
+  </label>
+  <label>Sort
+    <select id="rcp-hl-sort">
+      <option value="date:desc">Newest first</option>
+      <option value="date:asc">Oldest first</option>
+      <option value="name:asc">Name A–Z</option>
+      <option value="amount:desc">Amount, high to low</option>
+    </select>
+  </label>
+  <label>Rows
+    <select id="rcp-hl-size">
+      <option>5</option>
+      <option selected>10</option>
+      <option>25</option>
+    </select>
+  </label>
+  <button type="button" id="rcp-hl-cols">Columns…</button>
+</div>
+<table id="rcp-headless"></table>
+<pre class="demo-output" id="rcp-hl-log" aria-live="polite">Events appear here.</pre>

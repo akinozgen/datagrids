@@ -1,0 +1,97 @@
+# datagrids
+
+> Framework-agnostic, zero-dependency, accessible data grid that enhances plain HTML tables. A small core with
+> typed columns plus independent modules attached with `use` (no giant options object), three server protocols
+> (classic SSP wire incl. the yajra preset, Laravel paginator JSON, datagrids protocol v1) and styling isolated
+> under `--dg-*` tokens. npm: @akinozgen17/datagrids
+
+Key facts:
+- Install: `npm i @akinozgen17/datagrids` and `import "@akinozgen17/datagrids/css"` (required)
+- Init: `new Datagrid(table, { label, columns, use: [modules] })`; put the data source in `use`
+- `Datagrid.get(table)` returns the instance or `null`; it never initializes
+- Cells render as text; HTML is a per-column opt-in (the `yajra()` preset defaults untyped columns to HTML)
+- Types are the source of truth: `dist/index.d.ts`; the full API cheat sheet ships as `docs/llm.md`
+
+## Start here
+
+- [LLM cheat sheet](https://akinozgen.github.io/datagrids/llm.md): the complete API in one file
+- [Concepts](https://akinozgen.github.io/datagrids/guide/concepts.md): grid, columns, modules, pipelines
+- [Migrating from DataTables](https://akinozgen.github.io/datagrids/migration/from-datatables.md): option, event and API mapping
+
+## Guides
+
+- [Getting started](https://akinozgen.github.io/datagrids/guide/getting-started.md)
+- [Columns](https://akinozgen.github.io/datagrids/guide/columns.md)
+- [Data sources](https://akinozgen.github.io/datagrids/guide/data-sources.md)
+- [Server protocols](https://akinozgen.github.io/datagrids/guide/server-protocols.md)
+- [Lifecycle](https://akinozgen.github.io/datagrids/guide/lifecycle.md)
+- [States & errors](https://akinozgen.github.io/datagrids/guide/states-and-errors.md)
+- [Theming](https://akinozgen.github.io/datagrids/guide/theming.md)
+- [Localization & RTL](https://akinozgen.github.io/datagrids/guide/i18n.md)
+- [Anatomy (DOM contract)](https://akinozgen.github.io/datagrids/guide/anatomy.md)
+- [Accessibility](https://akinozgen.github.io/datagrids/guide/accessibility.md)
+- [Performance](https://akinozgen.github.io/datagrids/guide/performance.md)
+
+## Modules
+
+- [Module catalog](https://akinozgen.github.io/datagrids/modules.md)
+- [stateSave](https://akinozgen.github.io/datagrids/modules/state-save.md)
+- [colVis](https://akinozgen.github.io/datagrids/modules/colvis.md)
+- [colReorder](https://akinozgen.github.io/datagrids/modules/col-reorder.md)
+- [responsive](https://akinozgen.github.io/datagrids/modules/responsive.md)
+- [lazyColumns](https://akinozgen.github.io/datagrids/modules/lazy-columns.md)
+- [stickyHeader](https://akinozgen.github.io/datagrids/modules/sticky-header.md)
+- [keyboardGrid](https://akinozgen.github.io/datagrids/modules/keyboard-grid.md)
+- [rowReorder](https://akinozgen.github.io/datagrids/modules/row-reorder.md)
+- [filterPresets](https://akinozgen.github.io/datagrids/modules/filter-presets.md)
+- [autoRefresh](https://akinozgen.github.io/datagrids/modules/auto-refresh.md)
+- [multiSort](https://akinozgen.github.io/datagrids/modules/multi-sort.md)
+- [columnFilters](https://akinozgen.github.io/datagrids/modules/column-filters.md)
+- [filterPanel](https://akinozgen.github.io/datagrids/modules/filter-panel.md)
+- [urlSync](https://akinozgen.github.io/datagrids/modules/url-sync.md)
+- [softDeletes](https://akinozgen.github.io/datagrids/modules/soft-deletes.md)
+- [actions](https://akinozgen.github.io/datagrids/modules/actions.md)
+- [selection](https://akinozgen.github.io/datagrids/modules/selection.md)
+- [excel, csv, print](https://akinozgen.github.io/datagrids/modules/export.md)
+- [footer](https://akinozgen.github.io/datagrids/modules/footer.md)
+- [metaBind](https://akinozgen.github.io/datagrids/modules/meta-bind.md)
+- [buttons: reload, resetState, custom, group](https://akinozgen.github.io/datagrids/modules/buttons.md)
+
+## Recipes
+
+- [All recipes](https://akinozgen.github.io/datagrids/recipes.md)
+- [Laravel + yajra list](https://akinozgen.github.io/datagrids/recipes/laravel-yajra.md)
+- [Laravel paginator & API resources](https://akinozgen.github.io/datagrids/recipes/laravel-paginator.md)
+- [CSRF & session expiry](https://akinozgen.github.io/datagrids/recipes/csrf-and-session.md)
+- [Page filter panel](https://akinozgen.github.io/datagrids/recipes/filter-panel.md)
+- [Selection + bulk action](https://akinozgen.github.io/datagrids/recipes/bulk-actions.md)
+- [Row actions with confirm](https://akinozgen.github.io/datagrids/recipes/row-actions.md)
+- [Export](https://akinozgen.github.io/datagrids/recipes/export.md)
+- [Custom toolbar (headless)](https://akinozgen.github.io/datagrids/recipes/custom-toolbar.md)
+- [Grids in tabs & modals](https://akinozgen.github.io/datagrids/recipes/tabs-and-modals.md)
+- [Destroy, re-init & Livewire](https://akinozgen.github.io/datagrids/recipes/destroy-and-reinit.md)
+
+## Reference
+
+- [Grid options](https://akinozgen.github.io/datagrids/reference/options.md)
+- [Column options](https://akinozgen.github.io/datagrids/reference/columns.md)
+- [Instance methods](https://akinozgen.github.io/datagrids/reference/methods.md)
+- [Events](https://akinozgen.github.io/datagrids/reference/events.md)
+- [Static API & configure()](https://akinozgen.github.io/datagrids/reference/static.md)
+- [Writing a module](https://akinozgen.github.io/datagrids/reference/modules.md)
+- [Messages](https://akinozgen.github.io/datagrids/reference/messages.md)
+- [CSS tokens](https://akinozgen.github.io/datagrids/reference/css.md)
+- [Warning codes](https://akinozgen.github.io/datagrids/errors.md)
+
+## Protocol
+
+- [Server protocols overview](https://akinozgen.github.io/datagrids/protocol.md)
+- [SSP wire (ssp / yajra)](https://akinozgen.github.io/datagrids/protocol/ssp.md)
+- [Laravel paginator](https://akinozgen.github.io/datagrids/protocol/laravel-paginator.md)
+- [datagrids protocol v1 (spec)](https://akinozgen.github.io/datagrids/protocol/v1.md)
+- JSON Schemas: [request](https://akinozgen.github.io/datagrids/protocol/v1/request.schema.json), [response](https://akinozgen.github.io/datagrids/protocol/v1/response.schema.json), [error](https://akinozgen.github.io/datagrids/protocol/v1/error.schema.json)
+
+## Optional
+
+- [Site-generated llms.txt](https://akinozgen.github.io/datagrids/llms.txt) and [llms-full.txt](https://akinozgen.github.io/datagrids/llms-full.txt)
+- [Interactive docs](https://akinozgen.github.io/datagrids/): live demos with Request/Response tabs

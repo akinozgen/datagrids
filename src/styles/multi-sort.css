@@ -1,0 +1,24 @@
+/* ---------- multiSort: rank badge + secondary direction ---------- */
+.dg-sort-rank {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: calc(1 * var(--dg-u));
+  block-size: calc(1 * var(--dg-u));
+  padding-inline: 3px;
+  border-radius: var(--dg-radius-full);
+  background: var(--dg-accent-solid);
+  color: var(--dg-accent-fg);
+  font-size: 10px;
+  font-weight: var(--dg-weight-strong);
+  letter-spacing: 0;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+:where([data-sort-dir]) > .dg-sort { color: var(--dg-fg); }
+:where([data-sort-dir="asc"]) .dg-sort-icon .dg-up,
+:where([data-sort-dir="desc"]) .dg-sort-icon .dg-down { stroke: var(--dg-accent-ink); stroke-width: 2; }
+:where([data-sort-dir="asc"]) .dg-sort-icon .dg-down,
+:where([data-sort-dir="desc"]) .dg-sort-icon .dg-up { opacity: 0.35; }
+@media (forced-colors: active) {
+  .dg-sort-rank { background: Highlight; color: HighlightText; }
+}

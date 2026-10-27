@@ -1,0 +1,76 @@
+/* ---------- KOLON MENÜSÜ (colVis) ---------- */
+.dg-colvis {
+  max-inline-size: min(calc(20 * var(--dg-u)), calc(100vw - 1rem));
+  /* klavye odağı yapışık arama/alt şeridin altında kalmasın */
+  scroll-padding-block: calc(2.5 * var(--dg-u)) calc(3 * var(--dg-u));
+}
+
+/* fieldset UA kutusunu nötrle (reset border/padding/margin'i zaten sıfırlıyor).
+   Panel kendisi kayar; arama üstte, alt şerit altta yapışık kalır (fieldset overflow'u Chromium'da kırpmıyor) */
+.dg-colvis-set { min-inline-size: 0; }
+.dg-colvis-set > .dg-panel-label { float: none; inline-size: 100%; }
+.dg-colvis-list { display: grid; }
+.dg-colvis-list > [hidden],
+.dg-colvis-search[hidden],
+.dg-colvis-empty[hidden] { display: none; }
+
+/* satır: kalıcı checkbox + hover zemini + pointer; klavye odağında satır da zemin alır */
+.dg-panel-item:where(:has(.dg-check-input:focus-visible)) { background: var(--dg-muted); }
+.dg-panel-item:where([data-locked]) { cursor: not-allowed; }
+.dg-panel-item:where([data-locked]):hover { background: transparent; }
+.dg-panel-item:where([data-locked]) > svg {
+  flex: none;
+  inline-size: calc(0.875 * var(--dg-u));
+  block-size: calc(0.875 * var(--dg-u));
+}
+.dg-panel-item:where([data-locked]) .dg-check,
+.dg-panel-item:where([data-locked]) .dg-check-input { cursor: not-allowed; }
+
+/* panel içi arama (>12 kolon): selectable arama şeridi deseni, panel kenarına taşar */
+.dg-colvis-search {
+  display: flex;
+  align-items: center;
+  gap: var(--dg-space-2);
+  block-size: calc(2.25 * var(--dg-u));
+  margin: calc(-1 * var(--dg-panel-pad)) calc(-1 * var(--dg-panel-pad)) var(--dg-panel-pad);
+  padding-inline: calc(0.75 * var(--dg-u));
+  border-block-end: 1px solid var(--dg-line);
+  background: var(--dg-panel-bg);
+  color: var(--dg-muted-fg);
+  cursor: text;
+  position: sticky;
+  inset-block-start: calc(-1 * var(--dg-panel-pad));
+  z-index: 1;
+}
+.dg-colvis-search > svg { flex: none; }
+.dg-colvis-search-input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  block-size: 100%;
+  background: transparent;
+  outline: 2px solid transparent;
+  color: var(--dg-fg);
+  font-size: var(--dg-font-size);
+}
+.dg-colvis-search-input::placeholder { color: var(--dg-muted-fg); opacity: 1; }
+.dg-colvis-search-input::-webkit-search-cancel-button { appearance: none; }
+.dg-colvis-search:focus-within { color: var(--dg-accent-ink); }
+
+.dg-colvis-empty {
+  padding: calc(0.5 * var(--dg-u));
+  color: var(--dg-muted-fg);
+  font-size: var(--dg-font-size-sm);
+}
+
+.dg-colvis-foot {
+  flex-wrap: wrap;
+  position: sticky;
+  inset-block-end: calc(-1 * var(--dg-panel-pad));
+  z-index: 1;
+  margin: var(--dg-panel-pad) calc(-1 * var(--dg-panel-pad)) calc(-1 * var(--dg-panel-pad));
+  padding: var(--dg-panel-pad);
+  border-block-start: 1px solid var(--dg-line);
+  background: var(--dg-panel-bg);
+}
+.dg-colvis-foot > .dg-btn { flex: 1 1 auto; }
+

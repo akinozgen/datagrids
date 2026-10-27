@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://akinozgen.github.io/datagrids/protocol/v1/error.schema.json",
+  "title": "datagrids protocol v1: error",
+  "description": "Error response body of the datagrids protocol v1 (HTTP 4xx/5xx, application/problem+json): an RFC 9457 problem details object with the `code`, `retryable` and `errors` extension members.",
+  "type": "object",
+  "required": ["title", "status", "code"],
+  "properties": {
+    "type": {
+      "description": "Problem type URI. Defaults to \"about:blank\".",
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "title": {
+      "description": "Short, human-readable summary. Safe to show to end users.",
+      "type": "string"
+    },
+    "status": {
+      "description": "The HTTP status code of this response.",
+      "type": "integer",
+      "minimum": 400,
+      "maximum": 599
+    },
+    "detail": {
+      "description": "Occurrence-specific explanation. Diagnostic: clients show it to developers only.",
+      "type": "string"
+    },
+    "instance": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "code": {
+      "description": "Machine-readable error code (snake_case).",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "retryable": {
+      "description": "Whether repeating the same request may succeed.",
+      "type": "boolean"
+    },
+    "errors": {
+      "description": "Validation messages by request path (\"filters.date\", \"sort.0.key\", \"page.size\").",
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "type": "string" }
+      }
+    },
+    "v": {
+      "description": "Protocol major version (optional on errors).",
+      "const": 1
+    }
+  }
+}

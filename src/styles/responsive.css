@@ -1,0 +1,14 @@
+/* ---------- responsive: collapsed columns + detail rows ---------- */
+.dg-table > * > tr > :is(td, th):where([data-dg-collapsed]) { display: none; }
+.dg-table > tbody > tr:where(.dg-detail-row) { --dg-row-bg: color-mix(in oklab, var(--dg-fg) 3%, var(--dg-bg)); }
+.dg-table > tbody > tr:where(.dg-detail-row) > td { padding-block: calc(0.5 * var(--dg-u)) calc(0.75 * var(--dg-u)); }
+:where(.dg-expand):hover { background: color-mix(in oklab, var(--dg-fg) 7%, var(--dg-bg)); border-color: var(--dg-border-strong); color: var(--dg-fg); }
+:where(.dg-expand):focus-visible { outline: 2px solid var(--dg-accent-ink); outline-offset: 1px; }
+:where(.dg-expand[aria-expanded="true"]) { border-color: var(--dg-accent-ink); color: var(--dg-accent-ink); }
+.dg-detail > div { min-inline-size: 0; }
+.dg-detail dd { overflow-wrap: anywhere; }
+@media (forced-colors: active) {
+  :where(.dg-expand[aria-expanded="true"]) { border-color: Highlight; color: Highlight; }
+}
+/* the expand button and the anchor value stay on one line */
+.dg-table > tbody > tr > td:where(:has(> .dg-expand)) { white-space: nowrap; }

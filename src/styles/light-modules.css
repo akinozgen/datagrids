@@ -1,0 +1,10 @@
+/* ---------- softDeletes: aria-pressed toggle (kalıcı kutu göstergesi) ---------- */
+.dg-btn > .dg-check { margin: 0; }
+:where(.dg-btn:hover) .dg-check-box { border-color: var(--dg-fg); }
+:where(.dg-btn[aria-pressed="true"]) .dg-check-box { background: var(--dg-accent-solid); border-color: var(--dg-accent-solid); }
+:where(.dg-btn[aria-pressed="true"]) .dg-check-box .dg-i-check { opacity: 1; }
+.dg-btn:where([aria-pressed="true"]) { border-color: var(--dg-accent-ink); }
+
+@media (forced-colors: active) {
+  :where(.dg-btn[aria-pressed="true"]) .dg-check-box { background: Highlight; border-color: Highlight; color: HighlightText; }
+}

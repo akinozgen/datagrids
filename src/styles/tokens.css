@@ -1,0 +1,331 @@
+/* ============================================================
+   datagrids — Design Tokens
+   Kapsam: .dg (grid kökü) ve .dg-portal (yalnız Popover API'siz
+   fallback kökü). :root'a yazılmaz. @layer yok.
+
+   GİRDİ TOKEN'LARI (iki istisna): --dg-accent ve --dg-rem
+     Kütüphane bunları TANIMLAMAZ, yalnız okur: var(--dg-accent, #3d63dd),
+     var(--dg-rem, 1rem).
+     Host herhangi bir atada (:root, body, sarmalayıcı, .dg) verebilir;
+     kalıtımla gelir. Örn. host temasından:
+       body { --dg-accent: rgb(var(--brand-rgb)); }
+
+   FALLBACK DÜZENİ: önce her tarayıcıda çalışan statik açık palet,
+   sonra @supports blokları modern türetmeleri ekler. Custom property
+   içine yazılan color-mix()/light-dark() desteklenmeyen tarayıcıda
+   bildirim anında geçersiz SAYILMAZ, kullanım yerinde unset'e düşer.
+   Bu yüzden "statik değeri yaz, aynı blokta modern değerle ez" kalıbı
+   custom property'de fallback ÜRETMEZ; modern değer @supports içinde.
+
+   KOYU TEMA: palet light-dark() ile yazılır; hangi tarafın seçileceğini
+   elemanın color-scheme'i belirler. Varsayılan: host'tan kalıtılır
+   (host bildirmediyse "normal" = açık). data-dg-theme zorlar.
+   ============================================================ */
+
+.dg,
+.dg-portal {
+  /* ---------- TABAN ÖLÇÜ (girdi token'ı --dg-rem; kalıtılır) ----------
+     Tüm ölçüler bundan türer. Varsayılan 1rem → kullanıcının yazı boyutu
+     ve host'un html.font-size ölçeği izlenir. Host html'i layout için
+     küçültüyorsa (ör. ≤970px'te html{font-size:12px}) tek satır yeter:
+     body { --dg-rem: 16px; } */
+  --dg-u: var(--dg-rem, 1rem);
+
+  /* ---------- RENK: nötr palet (açık; her tarayıcı) ---------- */
+  --dg-bg:            #ffffff;  /* hücre / gövde zemini */
+  --dg-fg:            #1c2024;  /* birincil metin (beyaza 16.4:1) */
+  --dg-muted:         #f2f3f5;  /* kontrol hover zemini, nötr yüzey */
+  --dg-muted-fg:      #667085;  /* ikincil metin (beyaza 4.97:1, başlığa 4.64:1) */
+  --dg-border:        #d5d9e0;  /* kontrol kenarlığı (selectable ile aynı) */
+  --dg-border-hover:  #b6bcc8;
+  --dg-border-strong: #858d9b;  /* checkbox kutusu, nötr sıralama ikonu (≥3:1) */
+  --dg-head-bg:       #f6f7f9;  /* başlık satırı, tfoot, kart başlığı */
+  --dg-head-fg:       #596579;  /* başlık metni (başlık zeminine 5.5:1) */
+  --dg-panel-bg:      #ffffff;  /* kolon menüsü, hücre menüsü */
+  --dg-panel-border:  #e4e7ec;
+  --dg-surface:       #ffffff;  /* data-dg-surface="card" zemini */
+  --dg-danger:        #d93843;
+
+  /* ---------- RENK: ton paleti (chip, satır tonu, durumlar) ---------- */
+  --dg-tone-neutral:  #475467;
+  --dg-tone-info:     #1d63c8;
+  --dg-tone-ok:       #15803d;
+  --dg-tone-warn:     #b45309;
+  --dg-tone-bad:      #c0262d;
+
+  /* satır tonu zeminleri (rowTone): opak, birbirinden ayırt edilebilir */
+  --dg-row-ok:        #edf8f1;
+  --dg-row-warn:      #fff6dc;
+  --dg-row-bad:       #fdeeee;
+  --dg-row-info:      #edf3fd;
+
+  /* ---------- ACCENT türevleri (statik fallback) ----------
+     Bileşen kuralları --dg-accent'i DOĞRUDAN kullanmaz; yalnız bunları. */
+  --dg-accent-solid:  var(--dg-accent, #3d63dd); /* dolgu yüzey (checkbox, aktif sayfa) */
+  --dg-accent-fg:     #ffffff;                   /* dolgu üstü metin/glif */
+  --dg-accent-ink:    var(--dg-accent, #3d63dd); /* accent metin, ikon, focus kenarlığı */
+  --dg-accent-weak:   #ecf1fe;                   /* tint yüzey */
+  --dg-ring:          rgba(61, 99, 221, 0.24);   /* focus halosu */
+
+  /* ---------- Türetilmiş nötrler (statik fallback) ---------- */
+  --dg-line:          #e5e6e7;                   /* satır ayracı */
+  --dg-line-strong:   #d6d7d9;                   /* başlık altı, tfoot üstü */
+  --dg-row-alt:       #f9f9f9;                   /* zebra (opak) */
+  --dg-veil-hover:    rgba(28, 32, 36, 0.04);    /* satır hover örtüsü */
+  --dg-veil-selected: rgba(61, 99, 221, 0.10);   /* seçili satır örtüsü */
+  --dg-veil-selected-hover: rgba(61, 99, 221, 0.14);
+  --dg-scrollbar-thumb: rgba(28, 32, 36, 0.18);
+  --dg-skeleton:      #eceef1;
+  --dg-overlay:       rgba(255, 255, 255, 0.55); /* yeniden yüklemede gövde örtüsü */
+
+  /* ---------- BOŞLUK (4px grid, rem) ---------- */
+  --dg-space-1: calc(0.25 * var(--dg-u));   /*  4px */
+  --dg-space-2: calc(0.5 * var(--dg-u));    /*  8px */
+  --dg-space-3: calc(0.75 * var(--dg-u));   /* 12px */
+  --dg-space-4: calc(1 * var(--dg-u));      /* 16px */
+  --dg-space-5: calc(1.25 * var(--dg-u));   /* 20px */
+  --dg-space-6: calc(1.5 * var(--dg-u));    /* 24px */
+  --dg-space-8: calc(2 * var(--dg-u));      /* 32px */
+
+  /* ---------- KÖŞE YARIÇAPI ---------- */
+  --dg-radius-xs:      calc(0.25 * var(--dg-u));   /*  4px checkbox, skeleton */
+  --dg-radius-sm:      calc(0.375 * var(--dg-u));  /*  6px menü öğesi, ID pill, hücre butonu */
+  --dg-radius-md:      calc(0.5 * var(--dg-u));    /*  8px kontrol */
+  --dg-radius-panel:   calc(0.625 * var(--dg-u));  /* 10px panel (= öğe 6 + pad 4) */
+  --dg-radius-surface: calc(0.75 * var(--dg-u));   /* 12px kart yüzeyi */
+  --dg-radius-full:    999px;     /* rozet, sayaç */
+
+  /* ---------- TİPOGRAFİ (font ailesi HOST'tan miras) ---------- */
+  --dg-font-size-xs:   calc(0.6875 * var(--dg-u)); /* 11px chip, caps başlık */
+  --dg-font-size-sm:   calc(0.75 * var(--dg-u));   /* 12px başlık, bilgi, caption */
+  --dg-font-size-md:   calc(0.8125 * var(--dg-u)); /* 13px gövde (md) */
+  --dg-font-size-lg:   calc(0.875 * var(--dg-u));  /* 14px gövde (lg) */
+  --dg-line-height:    1.45;      /* hücre (13px → 18.85px) */
+  --dg-line-height-tight: 1.25;   /* kontrol, chip */
+  --dg-weight-regular: 400;
+  --dg-weight-medium:  500;
+  --dg-weight-strong:  600;
+  --dg-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* başlık stili: varsayılan caps (tsi dili); sentence varyantı data-dg-head="sentence" */
+  --dg-head-font-size: var(--dg-font-size-xs);
+  --dg-head-weight:    700;
+  --dg-head-transform: uppercase;
+  --dg-head-tracking:  0.06em;
+
+  /* ---------- GÖLGE (katmanlı, düşük alfa) ---------- */
+  --dg-shadow-xs:   0 1px 2px rgba(16, 18, 23, 0.06);
+  --dg-shadow-panel:
+      0 0 0 1px rgba(16, 18, 23, 0.04),
+      0 4px 10px -2px rgba(16, 18, 23, 0.08),
+      0 16px 32px -8px rgba(16, 18, 23, 0.10);
+  --dg-shadow-surface:
+      0 0 0 1px rgba(16, 18, 23, 0.06),
+      0 1px 2px -1px rgba(16, 18, 23, 0.08),
+      0 8px 24px -12px rgba(16, 18, 23, 0.16);
+  --dg-shadow-edge-start:  6px 0 8px -6px rgba(16, 18, 23, 0.18); /* başa yapışık kolonun taşma gölgesi */
+  --dg-shadow-edge-end:   -6px 0 8px -6px rgba(16, 18, 23, 0.18); /* sona yapışık kolon */
+  --dg-shadow-stuck:      0 6px 8px -8px rgba(16, 18, 23, 0.24);  /* yapışık başlık */
+
+  /* ---------- HAREKET ---------- */
+  --dg-dur-1: 100ms;   /* çıkış, mikro geri bildirim */
+  --dg-dur-2: 160ms;   /* giriş, panel açılışı */
+  --dg-dur-3: 220ms;   /* chevron dönüşü */
+  --dg-ease-out:   cubic-bezier(0.22, 1, 0.36, 1);
+  --dg-ease-in:    cubic-bezier(0.4, 0, 1, 1);
+  --dg-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---------- KATMAN (tablo içi; paneller top layer'da, z-index gerekmez) ---------- */
+  --dg-z-sticky-col:    2;
+  --dg-z-sticky-head:   3;
+  --dg-z-sticky-corner: 4;
+  --dg-z-overlay:       5;
+
+  /* ---------- BOYUT (md varsayılan; data-size override eder) ---------- */
+  --dg-font-size:      var(--dg-font-size-md); /* 13px */
+  --dg-control-h:      calc(2.125 * var(--dg-u));  /* 34px */
+  --dg-control-pad-x:  calc(0.625 * var(--dg-u));  /* 10px */
+  --dg-control-radius: var(--dg-radius-md);
+  --dg-icon-size:      calc(1 * var(--dg-u));      /* 16px */
+  --dg-check-size:     calc(1 * var(--dg-u));      /* 16px */
+  --dg-cell-btn-h:     calc(1.75 * var(--dg-u));   /* 28px hücre içi buton */
+
+  /* ---------- YOĞUNLUK (normal varsayılan; data-density override eder) ---------- */
+  --dg-row-h:       calc(2.25 * var(--dg-u));   /* 36px; hücrede min-yükseklik gibi davranır */
+  --dg-cell-pad-y:  calc(0.5 * var(--dg-u));    /*  8px */
+  --dg-cell-pad-x:  calc(0.75 * var(--dg-u));   /* 12px */
+  --dg-cell-valign: top;       /* çok satırlı satırlarda hizayı korur */
+  --dg-head-h:      var(--dg-row-h);
+
+  /* ---------- PANEL ---------- */
+  --dg-panel-pad:    calc(0.25 * var(--dg-u));          /*  4px */
+  --dg-panel-offset: calc(0.375 * var(--dg-u));         /*  6px tetikleyici ↔ panel */
+  --dg-panel-max-h:  min(calc(24 * var(--dg-u)), 70dvh);
+  --dg-menu-item-h:  calc(2 * var(--dg-u));             /* 32px */
+}
+
+/* İç (dokümante edilmeyen) satır durum değişkenleri her kökte sıfırlanır;
+   iç içe grid dış satırın durumunu kalıtmasın. */
+.dg {
+  --dg-_veil: initial;
+  --dg-_zebra-bg: initial;
+  --dg-_tone-bg: initial;
+}
+
+/* ============================================================
+   MODERN 1 — color-mix() türevleri (Baseline 2023)
+   ============================================================ */
+@supports (color: color-mix(in oklab, red, red)) {
+  .dg,
+  .dg-portal {
+    --dg-accent-weak:   color-mix(in oklab, var(--dg-accent-solid) 9%, var(--dg-bg));
+    --dg-ring:          color-mix(in oklab, var(--dg-accent-solid) 24%, transparent);
+    /* RCS yoksa ara çözüm: fg'ye doğru koyulaştır (cyan'da 3.9:1'de kalır) */
+    --dg-accent-ink:    color-mix(in oklab, var(--dg-accent-solid) 75%, var(--dg-fg));
+    --dg-line:          color-mix(in oklab, var(--dg-fg) 9%, transparent);
+    --dg-line-strong:   color-mix(in oklab, var(--dg-fg) 16%, transparent);
+    --dg-row-alt:       color-mix(in oklab, var(--dg-fg) 2.5%, var(--dg-bg));
+    --dg-veil-hover:    color-mix(in oklab, var(--dg-fg) 4%, transparent);
+    --dg-veil-selected: color-mix(in oklab, var(--dg-accent-solid) 10%, transparent);
+    --dg-veil-selected-hover: color-mix(in oklab, var(--dg-accent-solid) 15%, transparent);
+    --dg-scrollbar-thumb: color-mix(in oklab, var(--dg-fg) 18%, transparent);
+    --dg-skeleton:      color-mix(in oklab, var(--dg-fg) 7%, var(--dg-bg));
+    --dg-overlay:       color-mix(in oklab, var(--dg-bg) 55%, transparent);
+  }
+}
+
+/* ============================================================
+   MODERN 2 — göreli renk sözdizimi (RCS, Baseline 2024)
+   Host hangi accent'i verirse versin okunurluk garanti altında.
+   ============================================================ */
+@supports (color: oklch(from red l c h)) {
+  .dg,
+  .dg-portal {
+    /* Metin/ikon olarak accent: açıklık 0.52'de tavanlanır → beyaza ≥4.97:1 */
+    --dg-accent-ink: oklch(from var(--dg-accent-solid) min(l, 0.52) c h);
+    /* Dolgu üstü: açık accent'te siyah, koyuda beyaz (eşik L=0.60) */
+    --dg-accent-fg:  oklch(from var(--dg-accent-solid) clamp(0, (0.6 - l) * 1000, 1) 0 0);
+  }
+}
+
+/* ============================================================
+   MODERN 3 — koyu palet: light-dark() (Baseline 2024)
+   Seçimi elemanın color-scheme'i yapar (aşağıdaki "TEMA" bloğu).
+   ============================================================ */
+@supports (color: light-dark(red, red)) {
+  .dg,
+  .dg-portal {
+    --dg-bg:            light-dark(#ffffff, #17191d);
+    --dg-fg:            light-dark(#1c2024, #e6e8eb);
+    --dg-muted:         light-dark(#f2f3f5, #26292f);
+    --dg-muted-fg:      light-dark(#667085, #9aa2b1);
+    --dg-border:        light-dark(#d5d9e0, #3a3f47);
+    --dg-border-hover:  light-dark(#b6bcc8, #4d535d);
+    --dg-border-strong: light-dark(#858d9b, #737b89);
+    --dg-head-bg:       light-dark(#f6f7f9, #1f2227);
+    --dg-head-fg:       light-dark(#596579, #a3abb9);
+    --dg-panel-bg:      light-dark(#ffffff, #212429);
+    --dg-panel-border:  light-dark(#e4e7ec, #3a3f47);
+    --dg-surface:       light-dark(#ffffff, #1b1d22);
+    --dg-danger:        light-dark(#d93843, #f0656e);
+
+    --dg-tone-neutral:  light-dark(#475467, #a0afc5);
+    --dg-tone-info:     light-dark(#1d63c8, #66adff);
+    --dg-tone-ok:       light-dark(#15803d, #67c67f);
+    --dg-tone-warn:     light-dark(#b45309, #f78f54);
+    --dg-tone-bad:      light-dark(#c0262d, #ff756f);
+
+    --dg-row-ok:        light-dark(#edf8f1, #15281c);
+    --dg-row-warn:      light-dark(#fff6dc, #2b2312);
+    --dg-row-bad:       light-dark(#fdeeee, #2e1719);
+    --dg-row-info:      light-dark(#edf3fd, #162133);
+
+    /* koyuda gölge zayıflar, kenar tanımı devralır */
+    --dg-shadow-xs: 0 1px 2px light-dark(rgba(16, 18, 23, 0.06), rgba(0, 0, 0, 0.4));
+    --dg-shadow-panel:
+        0 0 0 1px light-dark(rgba(16, 18, 23, 0.04), rgba(0, 0, 0, 0.4)),
+        0 4px 10px -2px light-dark(rgba(16, 18, 23, 0.08), rgba(0, 0, 0, 0.3)),
+        0 16px 32px -8px light-dark(rgba(16, 18, 23, 0.10), rgba(0, 0, 0, 0.45));
+  }
+}
+
+/* Koyuda accent 1–2 kademe açılır; ink ve dolgu üstü buna göre */
+@supports (color: light-dark(red, red)) and (color: oklch(from red l c h)) {
+  .dg,
+  .dg-portal {
+    --dg-accent-solid: light-dark(var(--dg-accent, #3d63dd),
+                                  oklch(from var(--dg-accent, #3d63dd) max(l, 0.7) c h));
+    --dg-accent-ink:   light-dark(oklch(from var(--dg-accent, #3d63dd) min(l, 0.52) c h),
+                                  oklch(from var(--dg-accent, #3d63dd) max(l, 0.74) c h));
+    --dg-accent-fg:    light-dark(oklch(from var(--dg-accent, #3d63dd) clamp(0, (0.6 - l) * 1000, 1) 0 0),
+                                  #10131a);
+  }
+}
+
+/* ============================================================
+   TEMA — varsayılan: host'un color-scheme'i (kalıtım).
+   light | dark zorlar; system işletim sistemini izler.
+   ============================================================ */
+.dg[data-dg-theme="light"],
+.dg-portal[data-dg-theme="light"]  { color-scheme: light; }
+.dg[data-dg-theme="dark"],
+.dg-portal[data-dg-theme="dark"]   { color-scheme: dark; }
+.dg[data-dg-theme="system"],
+.dg-portal[data-dg-theme="system"] { color-scheme: light dark; }
+
+/* ============================================================
+   BOYUT — yalnız token override; bileşen kuralı boyuta özel yazılmaz
+   ============================================================ */
+.dg[data-size="sm"],
+.dg-portal[data-size="sm"] {
+  --dg-font-size:     var(--dg-font-size-sm);  /* 12px */
+  --dg-control-h:     calc(1.875 * var(--dg-u));                /* 30px */
+  --dg-control-pad-x: calc(0.5 * var(--dg-u));
+  --dg-icon-size:     calc(0.875 * var(--dg-u));
+  --dg-check-size:    calc(0.875 * var(--dg-u));
+  --dg-cell-btn-h:    calc(1.5 * var(--dg-u));
+}
+
+.dg[data-size="lg"],
+.dg-portal[data-size="lg"] {
+  --dg-font-size:     var(--dg-font-size-lg);  /* 14px */
+  --dg-control-h:     calc(2.5 * var(--dg-u));                  /* 40px */
+  --dg-control-pad-x: calc(0.75 * var(--dg-u));
+  --dg-icon-size:     calc(1.125 * var(--dg-u));
+  --dg-check-size:    calc(1.125 * var(--dg-u));
+  --dg-cell-btn-h:    calc(2 * var(--dg-u));
+}
+
+/* ============================================================
+   YOĞUNLUK — boyuttan bağımsız ikinci eksen, yalnız token
+   ============================================================ */
+.dg[data-density="compact"] {
+  --dg-row-h:      calc(1.75 * var(--dg-u));  /* 28px */
+  --dg-cell-pad-y: calc(0.25 * var(--dg-u));
+  --dg-cell-pad-x: calc(0.5 * var(--dg-u));
+  --dg-cell-btn-h: calc(1.375 * var(--dg-u));
+}
+
+.dg[data-density="comfortable"] {
+  --dg-row-h:      calc(2.75 * var(--dg-u));  /* 44px */
+  --dg-cell-pad-y: calc(0.75 * var(--dg-u));
+  --dg-cell-pad-x: calc(0.875 * var(--dg-u));
+}
+
+/* Başlık sentence varyantı (varsayılan caps) */
+.dg[data-dg-head="sentence"] {
+  --dg-head-font-size: var(--dg-font-size-sm);
+  --dg-head-weight:    600;
+  --dg-head-transform: none;
+  --dg-head-tracking:  normal;
+}
+
+/* Dokunmatik: kontroller 44px; satır yoğunluğu değişmez (hücre hedefi satır boyunu kullanır) */
+@media (pointer: coarse) {
+  .dg:not([data-size="lg"]),
+  .dg-portal:not([data-size="lg"]) {
+    --dg-control-h:  calc(2.75 * var(--dg-u));
+    --dg-check-size: calc(1.125 * var(--dg-u));
+    --dg-menu-item-h: calc(2.75 * var(--dg-u));
+  }
+}

@@ -1,0 +1,10 @@
+/* ---------- keyboardGrid: focused cell ring (same ring as every dg control) ---------- */
+.dg-table:where([role="grid"]) > :is(thead, tbody) > tr > :is(td, th):focus { outline: 2px solid transparent; }
+.dg-table:where([role="grid"]) > :is(thead, tbody) > tr > :is(td, th):focus-visible {
+  outline: 2px solid var(--dg-accent-ink);
+  outline-offset: -2px;
+  border-radius: var(--dg-radius-xs);
+}
+@media (forced-colors: active) {
+  .dg-table:where([role="grid"]) > :is(thead, tbody) > tr > :is(td, th):focus-visible { outline-color: Highlight; }
+}

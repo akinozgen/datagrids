@@ -1,0 +1,25 @@
+<div class="demo-form">
+  <label>Status
+    <select id="rcp-fp-status">
+      <option value="">Any status</option>
+      <option value="open">Open</option>
+      <option value="pending">Pending</option>
+      <option value="done">Done</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+  </label>
+  <label>Units
+    <select id="rcp-fp-unit" multiple size="3">
+      <option>S.T.A.R.S. Alpha</option>
+      <option>S.T.A.R.S. Bravo</option>
+      <option>R.P.D.</option>
+      <option>Umbrella Corp.</option>
+      <option>B.S.A.A.</option>
+    </select>
+  </label>
+  <label>Name contains
+    <input id="rcp-fp-name" type="text" placeholder="redfield, ada…">
+  </label>
+  <button type="button" id="rcp-fp-reset">Reset filters</button>
+</div>
+<table id="rcp-filter-panel"></table>

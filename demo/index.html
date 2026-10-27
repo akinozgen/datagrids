@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="csrf-token" content="demo-csrf-token" />
+  <title>datagrids — demo</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="./demo.css" />
+</head>
+<body>
+  <div class="demo-shell">
+    <nav class="demo-nav" id="nav" aria-label="Demolar">
+      <h1>datagrids</h1>
+      <p>Canlı demo · her özellik ayrı bölümde</p>
+    </nav>
+    <main id="main">
+      <!-- DOM kaynaklı tablo: sunucu render'ı gibi düz HTML, sonra güçlendirilir -->
+      <template id="dom-table-tpl">
+        <table id="dom-table">
+          <caption>Birim envanteri</caption>
+          <thead>
+            <tr><th data-dg-key="kod">Kod</th><th data-dg-key="item">Eşya</th><th data-dg-key="adet" data-dg-type="number" data-dg-align="end">Adet</th><th data-dg-key="mekan">Mekân</th><th data-dg-key="not" data-dg-sortable="false">Not</th></tr>
+          </thead>
+          <tbody>
+            <tr id="inv-1"><td><span class="dg-id">INV-001</span></td><td>Yeşil Ot</td><td data-order="42">42</td><td>Spencer Malikanesi</td><td><b>Kritik</b> stok</td></tr>
+            <tr id="inv-2"><td><span class="dg-id">INV-002</span></td><td>Kırmızı Ot</td><td data-order="7">7</td><td>Raccoon City</td><td>—</td></tr>
+            <tr id="inv-3"><td><span class="dg-id">INV-003</span></td><td>Mürekkep Şeridi</td><td data-order="120">120</td><td>Karakol</td><td><a href="#dom">Kayıt</a></td></tr>
+            <tr id="inv-4"><td><span class="dg-id">INV-004</span></td><td>İlk Yardım Spreyi</td><td data-order="15">15</td><td>Işık Kulesi</td><td>Raf 3</td></tr>
+            <tr id="inv-5"><td><span class="dg-id">INV-005</span></td><td>Mavi Ot</td><td data-order="3">3</td><td>Arklay Dağları</td><td>—</td></tr>
+            <tr id="inv-6"><td><span class="dg-id">INV-006</span></td><td>Şemsiye A.Ş. Rozeti</td><td data-order="1">1</td><td>NEST</td><td><i>Kanıt</i></td></tr>
+            <tr id="inv-7"><td><span class="dg-id">INV-007</span></td><td>Oyun Kartı</td><td data-order="2">2</td><td>Spencer Malikanesi</td><td>—</td></tr>
+            <tr id="inv-8"><td><span class="dg-id">INV-008</span></td><td>Işıldak</td><td data-order="11">11</td><td>Rockfort Adası</td><td>Pil yok</td></tr>
+          </tbody>
+        </table>
+      </template>
+    </main>
+  </div>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

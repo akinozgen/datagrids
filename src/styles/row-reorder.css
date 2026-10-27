@@ -1,0 +1,90 @@
+/* ---------- SATIR SIRALAMA (rowReorder) ----------
+   Tutamak kalıcıdır: grip ikonu her satırda görünür, hover zemini + grab imleci.
+   Pasif durum da kalıcıdır (soluk ikon + not-allowed); sebep title'da. */
+.dg-reorder {
+  display: inline-grid;
+  place-items: center;
+  inline-size: calc(1.5 * var(--dg-u));
+  block-size: var(--dg-cell-btn-h);
+  border: 1px solid transparent;
+  border-radius: var(--dg-radius-sm);
+  color: var(--dg-muted-fg);
+  vertical-align: top;
+  cursor: grab;
+  touch-action: none;                 /* dokunmatikte sürükleme sayfayı kaydırmasın */
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms var(--dg-ease-out), color 120ms var(--dg-ease-out), border-color 120ms var(--dg-ease-out);
+}
+.dg-reorder:hover { background: var(--dg-muted); color: var(--dg-fg); }
+.dg-reorder:focus { outline: 2px solid transparent; }
+.dg-reorder:focus-visible { border-color: var(--dg-accent-ink); box-shadow: 0 0 0 3px var(--dg-ring); }
+.dg-reorder:where([aria-pressed="true"]) {
+  background: var(--dg-accent-weak);
+  border-color: var(--dg-accent-ink);
+  color: var(--dg-accent-ink);
+  cursor: grabbing;
+}
+.dg-reorder:where([aria-disabled="true"]) { color: var(--dg-muted-fg); cursor: not-allowed; }
+.dg-reorder:where([aria-disabled="true"]):hover { background: transparent; color: var(--dg-muted-fg); }
+.dg-reorder:where([aria-disabled="true"]) > svg { opacity: 0.4; }
+
+/* tutamak bir veri kolonunun içindeyse: tutamak + içerik yan yana */
+.dg-reorder-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(0.375 * var(--dg-u));
+  min-inline-size: 0;
+}
+.dg-reorder-wrap > .dg-reorder { flex: none; margin-block: calc((var(--dg-line-height) * 1em - var(--dg-cell-btn-h)) / 2); }
+
+/* ayrılmış kolon: satır yüksekliğini büyütmez */
+.dg-table > tbody > tr > td:where([data-key="__reorder"]) {
+  padding-block: calc((var(--dg-row-h) - var(--dg-cell-btn-h) - 1px) / 2);
+  padding-inline: calc(0.5 * var(--dg-u)) 0;
+}
+.dg-table > thead > tr > th:where([data-key="__reorder"]) { padding-inline: calc(0.5 * var(--dg-u)) 0; }
+
+/* taşınan satır (işaretçi ya da klavye) */
+.dg-table > tbody > tr:where([data-state="dragging"]) { --dg-_veil: var(--dg-veil-selected); }
+.dg-table > tbody > tr:where([data-state="dragging"]) > :is(td, th) {
+  box-shadow: inset 0 1px 0 var(--dg-accent-ink), inset 0 -1px 0 var(--dg-accent-ink);
+}
+.dg:where([data-dg-dragging]),
+.dg:where([data-dg-dragging]) * { cursor: grabbing; user-select: none; }
+
+/* bırakma çizgisi: çerçevede, görünür genişlik boyunca; başlangıç ucunda halka */
+.dg-drop-line {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: var(--dg-_drop-y, 0);
+  block-size: 2px;
+  margin-block-start: -1px;
+  background: var(--dg-accent-solid);
+  pointer-events: none;
+  z-index: var(--dg-z-overlay);
+}
+.dg-drop-line::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: -3px;
+  inline-size: 8px;
+  block-size: 8px;
+  border: 2px solid var(--dg-accent-solid);
+  border-radius: var(--dg-radius-full);
+  background: var(--dg-bg);
+}
+.dg-drop-line:where([hidden]) { display: none; }
+
+@media (forced-colors: active) {
+  .dg-reorder:where([aria-pressed="true"]) { border-color: Highlight; color: Highlight; }
+  .dg-reorder:where([aria-disabled="true"]) { color: GrayText; }
+  .dg-drop-line { background: Highlight; }
+  .dg-drop-line::before { border-color: Highlight; background: Canvas; }
+  .dg-table > tbody > tr:where([data-state="dragging"]) > :is(td, th) { box-shadow: none; outline: 2px solid Highlight; outline-offset: -2px; }
+}
+
+@media print {
+  .dg-reorder, .dg-drop-line { display: none; }
+}

@@ -1,0 +1,53 @@
+/* ---------- colReorder: header grip, drag state, drop line ---------- */
+.dg-col-grip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  margin-inline-start: calc(-0.375 * var(--dg-u));
+  color: var(--dg-muted-fg);
+  cursor: grab;
+  touch-action: none;
+}
+.dg-col-grip > svg { inline-size: calc(0.75 * var(--dg-u)); block-size: calc(0.875 * var(--dg-u)); }
+:where(.dg-sort:hover, th[data-dg-movable]:hover) > .dg-col-grip { color: var(--dg-fg); }
+/* end-aligned headers run row-reverse: keep the grip at the inline start of the cell */
+:where([data-align="end"]) > .dg-sort > .dg-col-grip { order: 99; margin-inline: 0 auto; }
+.dg-table > thead > tr > th:where([data-state="dragging"]) {
+  background-color: color-mix(in oklab, var(--dg-accent-solid) 12%, var(--dg-head-bg));
+  color: var(--dg-fg);
+}
+.dg:where([data-dg-dragging]) { cursor: grabbing; user-select: none; }
+.dg:where([data-dg-dragging]) .dg-sort { cursor: grabbing; }
+.dg-col-drop {
+  position: fixed;
+  z-index: 1000;
+  inline-size: 2px;
+  border-radius: 1px;
+  background: var(--dg-accent-solid);
+  pointer-events: none;
+}
+
+/* colVis panel: move buttons while colReorder is attached */
+.dg-panel-row { display: flex; align-items: center; gap: calc(0.25 * var(--dg-u)); }
+.dg-panel-row > .dg-panel-item { flex: 1; min-inline-size: 0; }
+.dg-move {
+  display: inline-grid;
+  place-items: center;
+  inline-size: calc(1.5 * var(--dg-u));
+  block-size: calc(1.5 * var(--dg-u));
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--dg-radius-xs);
+  background: transparent;
+  color: var(--dg-muted-fg);
+  cursor: pointer;
+}
+.dg-move > svg { inline-size: calc(0.875 * var(--dg-u)); block-size: calc(0.875 * var(--dg-u)); }
+.dg-move:hover { background: color-mix(in oklab, var(--dg-fg) 7%, transparent); color: var(--dg-fg); }
+.dg-move:focus-visible { outline: 2px solid var(--dg-accent-ink); outline-offset: -1px; }
+.dg-move:disabled { opacity: 0.35; cursor: default; background: transparent; }
+
+@media (forced-colors: active) {
+  .dg-col-drop { background: Highlight; }
+  .dg-move:disabled { color: GrayText; opacity: 1; }
+}

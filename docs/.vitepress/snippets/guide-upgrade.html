@@ -1,0 +1,19 @@
+<!-- what a server template prints: no JSON config, just a preset name and a few scalar attributes -->
+<table data-datagrid="agent-list" data-dg-name="upgraded" data-dg-label="Agents (declarative)"
+       data-dg-page-size="5" data-dg-sort="amount:desc" data-url="/api/all/agents?limit=60">
+  <thead>
+    <tr>
+      <th data-dg-key="ref">Ref</th>
+      <th data-dg-key="name">Name</th>
+      <th data-dg-key="unit" data-dg-visible="false">Unit</th>
+      <th data-dg-key="amount" data-dg-type="number">Amount</th>
+      <th data-dg-key="date" data-dg-type="date">Date</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+<div class="demo-buttons" style="margin-top: 12px">
+  <button type="button" id="guide-upgrade-again">upgrade() again</button>
+  <button type="button" id="guide-upgrade-reload">reload("upgraded")</button>
+</div>
+<div class="demo-output" id="guide-upgrade-log"></div>
