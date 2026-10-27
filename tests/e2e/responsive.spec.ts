@@ -45,7 +45,9 @@ test.describe("responsive", () => {
     await expect(page.locator(`${S} tbody tr.dg-detail-row`)).toHaveCount(0);
     await page.locator(`${S} .dg-pager [data-go="prev"]`).click();
     await expect(page.locator(`${S} tbody tr.dg-detail-row`)).toHaveCount(1);
-    await width(page, "100%");
+    // wide enough for every column with any font set (CI fonts run wider than local ones)
+    await page.locator(`${S} .rs-box`).evaluate((el) => ((el as HTMLElement).style.maxInlineSize = "none"));
+    await width(page, "3000px");
     await expect(page.locator(`${S} thead th[data-dg-collapsed]`)).toHaveCount(0);
     await expect(page.locator(`${S} .dg-expand`)).toHaveCount(0);
     await expect(page.locator(`${S} tbody tr.dg-detail-row`)).toHaveCount(0);

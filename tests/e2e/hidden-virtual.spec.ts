@@ -1,9 +1,13 @@
+import { resolve } from "node:path";
 import { test, expect } from "@playwright/test";
+
+// the library straight from the dev server (any checkout location)
+const entry = `/@fs${resolve("src/index.ts")}`;
 
 test("a virtual grid built inside a hidden container locks real column widths once shown", async ({ page }) => {
   await page.goto("/");
-  const widths = await page.evaluate(async () => {
-    const lib = await import("/@fs/home/ozgen/Masaüstü/datagrids/src/index.ts" as string);
+  const widths = await page.evaluate(async (src) => {
+    const lib = await import(src);
     const box = document.createElement("div");
     box.style.display = "none";
     box.innerHTML = "<table id='hv'></table>";
@@ -18,7 +22,7 @@ test("a virtual grid built inside a hidden container locks real column widths on
     g.destroy();
     box.remove();
     return { cols, rendered };
-  });
+  }, entry);
   expect(widths.cols.length).toBe(3);
   for (const w of widths.cols) expect(parseFloat(w)).toBeGreaterThan(20);
   expect(widths.rendered).toBeLessThan(200);
