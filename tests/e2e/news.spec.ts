@@ -5,8 +5,8 @@ test("demo: the what's-new section is on top and every example works", async ({ 
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   await expect(page.locator("#main > section").first()).toHaveId("yenilikler");
-  await expect(page.locator("#yenilikler .news-item")).toHaveCount(8);
-  await expect(page.locator("#yenilikler .dg")).toHaveCount(8);
+  await expect(page.locator("#yenilikler .news-item")).toHaveCount(9);
+  await expect(page.locator("#yenilikler .dg")).toHaveCount(9);
   await expect(page.locator("#yeni-locale .demo-log")).toContainText('grid.locale = "tr"');
   // a control scrolled into view and hovered right away still gets its tooltip
   const next = page.locator('#yeni-ipucu .dg-pager-btn[data-go="next"]');

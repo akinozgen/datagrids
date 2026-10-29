@@ -1,7 +1,7 @@
 // Yenilikler: son sürümdeki her değişiklik için canlı bir örnek; sayfanın en üstünde durur.
 import { Datagrid, actions, arraySource, column, reorderColumn, rowReorder, selection, serverSide, yajra } from "@/index";
 import type { Row } from "@/index";
-import { people } from "../data";
+import { durumLabels, durumTones, people } from "../data";
 import { log, table, tools } from "../shared";
 
 const VERSION = "0.1.1";
@@ -227,6 +227,48 @@ const items: News[] = [
         ],
       });
       g.on("beforeAction", ({ id, row }) => (write(`beforeAction: ${id} · ${row.ad}`), true));
+    },
+  },
+  {
+    id: "yeni-grup",
+    title: "Aksiyonlar bitişik buton grubu",
+    lead: "Satır içi aksiyonlar artık tek parça bir buton grubu (varsayılan). Pasifleşebilen öğe ⓘ'nin yerini her satırda ayırır, böylece gruplar satırdan satıra hizalı kalır. actions({ buttonGroup: false }) eski ayrı düğmelere döner; düğmeyle karşılaştırın.",
+    build(card) {
+      let grouped = true;
+      let g: Datagrid | null = null;
+      const rows = people(10, 23) as unknown as Row[];
+      const t = table(card, "n-grup");
+      const make = () => {
+        g?.destroy();
+        g = new Datagrid(t, {
+          name: "n-grup",
+          label: "Buton grubu",
+          pageSize: 5,
+          columns: [column.text("ad", { title: "Personel" }), column.badge("durum", { title: "Durum", labels: durumLabels, tones: durumTones }), column.actions()],
+          use: [
+            arraySource(rows),
+            actions({
+              buttonGroup: grouped,
+              items: [
+                { id: "detay", label: "Detay", icon: "eye", href: "#kisi-{id}" },
+                { id: "onayla", label: "Onayla", icon: "check", handler: () => {}, disabled: (r) => (r.durum === "tamam" ? "Zaten tamamlandı" : r.durum === "iptal" ? "İptal edilmiş kayıt onaylanamaz" : null) },
+              ],
+            }),
+          ],
+        });
+      };
+      const box = tools(card, {});
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = "buttonGroup: true";
+      b.addEventListener("click", () => {
+        grouped = !grouped;
+        b.textContent = `buttonGroup: ${grouped}`;
+        make();
+      });
+      box.append(b);
+      card.prepend(box);
+      make();
     },
   },
   {
