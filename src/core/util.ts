@@ -61,6 +61,13 @@ export function toggleAttr(el: Element, name: string, on: boolean, value = ""): 
   else el.removeAttribute(name);
 }
 
+/** A stored value as text: HTML-default sources (yajra) escape strings and may send markup. */
+export function cellText(v: unknown, mode: "text" | "html"): string {
+  if (v == null) return "";
+  const s = String(v);
+  return mode === "html" && /[&<]/.test(s) ? htmlToText(s) : s;
+}
+
 /** Grid tooltip (`data-dg-tip`, see dom/tooltip); `describe` also makes it the accessible description, as `title` did. */
 export function setTip(el: Element, text: string | null, describe = false): void {
   toggleAttr(el, "data-dg-tip", !!text, text ?? "");

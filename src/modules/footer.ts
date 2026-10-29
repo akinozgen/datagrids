@@ -3,7 +3,7 @@ import { warn } from "../core/warn";
 import type { CellContext, DatagridApi, ModuleDef, ResolvedColumn, Row } from "../core/types";
 import { parseNumber } from "../core/collate";
 import { cellValue } from "../data/client";
-import { h } from "../core/util";
+import { getPath, h } from "../core/util";
 
 export type FooterAgg = "sum" | "avg" | "count" | ((rows: Row[], raw: any, grid: DatagridApi) => unknown);
 
@@ -81,7 +81,8 @@ export function footer(opts: FooterOptions): ModuleDef<"footer", FooterApi> {
         // same render as the cells: ₺, decimals and tabular figures line up
         if (agg !== "count" && c.render && (c.type === "money" || c.type === "number")) {
           const row: Row = { [c.data ?? c.key]: v };
-          const out = c.render(v, row, { row, key: c.key, index: -1, position: -1, td } as CellContext);
+          const text = (r: Row, p: string) => String(getPath(r, p) ?? "");
+          const out = c.render(v, row, { row, key: c.key, index: -1, position: -1, td, locale: ctx.locale, text } as CellContext);
           if (out != null) return out instanceof Node ? out : String(out);
         }
         return h("span", { class: "dg-num", "data-sign": v < 0 ? "neg" : null }, nf.format(v));

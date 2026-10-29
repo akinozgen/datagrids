@@ -118,6 +118,13 @@ flips, because yajra escapes every column on the server with `e()` — except th
   `"1.500"` = 1.5). For Turkish-formatted text from `number_format()` (`"1.500"` = 1500) add
   `source: "tr"`; for money HTML rendered by the controller use `column.money(key, { source: "html" })`.
 - Force text for one column with `text: true`; force HTML on an `ssp()` grid with `column.html()`.
+- **A `render` that reads other fields** gets them escaped, as the server sent them: `row.name` is
+  `Ada &amp; Leon`. Use `ctx.text(row, "name")` for the text (`Ada & Leon`). The `value` argument
+  is already decoded.
+
+  ```js
+  column.text("summary", { render: (v, row, ctx) => `${ctx.text(row, "name")} · ${ctx.text(row, "unit")}` })
+  ```
 - Use `ssp()` for any other server that speaks the same wire format (hand-written server-side
   scripts, other frameworks): it is the same protocol with the safe default.
 

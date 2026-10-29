@@ -7,7 +7,7 @@ import { en, mergeMessages, resolveLocale, tr as trMessages, type Messages } fro
 import { config } from "./core/config";
 import { byName, byTable } from "./core/registry";
 import { fail, notice, suggest, warn } from "./core/warn";
-import { debounce, frag, getPath, h, htmlToText, nextId, toggleAttr } from "./core/util";
+import { cellText, debounce, frag, getPath, h, htmlToText, nextId, toggleAttr } from "./core/util";
 import { icons } from "./dom/icons";
 import { arraySourceDef, domSourceDef } from "./data/sources";
 import { httpError, fetchError } from "./data/errors";
@@ -1386,6 +1386,7 @@ export class Datagrid implements DatagridApi {
       tr = document.createElement("tr");
       tr.setAttribute("data-key", key);
       const mode = this.source.cells ?? "text";
+      const text = (r: Row, path: string) => cellText(getPath(r, path), mode);
       for (const c of this.shown) {
         const td = document.createElement("td");
         td.setAttribute("data-key", c.key);
@@ -1394,7 +1395,7 @@ export class Datagrid implements DatagridApi {
         if (c.sticky) td.setAttribute("data-sticky", c.sticky);
         if (c.className) td.className = c.className;
         if (!c.visible) td.hidden = true;
-        this.fillCell(td, c, row, { row, key: c.key, index: i, position: pos, td, locale: this.locale }, mode);
+        this.fillCell(td, c, row, { row, key: c.key, index: i, position: pos, td, locale: this.locale, text }, mode);
         tr.append(td);
       }
       const extra = row as { DT_RowClass?: unknown; DT_RowId?: unknown };

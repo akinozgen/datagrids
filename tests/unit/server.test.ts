@@ -267,6 +267,39 @@ describe("yajra escaped values in typed columns", () => {
   });
 });
 
+describe("ctx.text: other fields of an escaped row", () => {
+  it("decodes entities and strips markup on yajra, leaves client rows alone, and never mutates the row", async () => {
+    const { Datagrid, column, serverSide, yajra, arraySource, config } = await import("../../src/index");
+    config.fetch = (async (_u: RequestInfo | URL, init?: RequestInit) => {
+      const draw = new URLSearchParams(String(init?.body ?? "")).get("draw");
+      return new Response(JSON.stringify({ draw: Number(draw), recordsTotal: 1, recordsFiltered: 1, data: [{ id: 1, ad: "Ada &amp; Leon", birim: "<b>R&amp;D</b>" }] }), { headers: { "Content-Type": "application/json" } });
+    }) as typeof fetch;
+    try {
+      const seen: unknown[] = [];
+      const summary = column.text("ozet", {
+        render: (_v, row: Record<string, unknown>, ctx) => {
+          seen.push(row.ad);
+          return `${ctx.text(row, "ad")} · ${ctx.text(row, "birim")} · ${ctx.text(row, "yok")}`;
+        },
+      });
+      document.body.innerHTML = "<table id='t'></table>";
+      const g = new Datagrid("#t", { columns: [column.text("ad"), summary], use: [serverSide({ url: "/x", protocol: yajra() })] });
+      await new Promise((r) => setTimeout(r, 5));
+      expect(g.root.querySelector("td[data-key=ozet]")!.textContent).toBe("Ada & Leon · R&D · ");
+      expect(seen).toEqual(["Ada &amp; Leon"]);
+      g.destroy();
+      document.body.innerHTML = "<table id='t'></table>";
+      const c = new Datagrid("#t", { columns: [column.text("ad"), summary], use: [arraySource([{ id: 1, ad: "Tom &amp; Jerry", birim: "<b>x</b>" }])] });
+      await new Promise((r) => setTimeout(r, 5));
+      // a client source stores text as is: nothing to decode
+      expect(c.root.querySelector("td[data-key=ozet]")!.textContent).toBe("Tom &amp; Jerry · <b>x</b> · ");
+      c.destroy();
+    } finally {
+      config.fetch = undefined;
+    }
+  });
+});
+
 describe("order after clearing the sort", () => {
   it("clearing at runtime keeps the default order on the wire; only an explicit sort:[] drops it", async () => {
     const { Datagrid, column, serverSide, yajra, configure } = await import("../../src/index");

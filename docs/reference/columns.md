@@ -37,7 +37,7 @@ Cells are text by default; HTML is an explicit opt-in.
 | `html` | `boolean` | — | `true` writes the value (or a string returned by `render`) as HTML. |
 | `text` | `boolean` | — | `true` forces text even when the source defaults to HTML. |
 | `sticky` | `"start" \| "end"` | — | Pins the column to an edge while the table scrolls horizontally. |
-| `render` | `(value, row, ctx) => Node \| string \| number \| null` | — | Cell content. A `Node` is appended as is; a string or number is written as text unless the column has `html: true`; `null`, `undefined` or `""` falls back to `defaultContent`. `ctx` is `{ row, key, index, position, td, locale }`: `key` is the column key, `index` the position in the view, `position` = page offset + index, `locale` the grid's locale. |
+| `render` | `(value, row, ctx) => Node \| string \| number \| null` | — | Cell content. A `Node` is appended as is; a string or number is written as text unless the column has `html: true`; `null`, `undefined` or `""` falls back to `defaultContent`. `ctx` is `{ row, key, index, position, td, locale, text }`: `key` is the column key, `index` the position in the view, `position` = page offset + index, `locale` the grid's locale. `value` already arrives as text; `ctx.text(row, path)` gives any other field as text too (on an HTML-default source such as `yajra()` the row's strings are server-escaped and may hold markup; the row itself is never changed). |
 | `value` | `(row) => unknown` | — | Computed value; replaces the `data` lookup for render, search, client sort and client filters. |
 | `compare` | `(a, b) => number` | collation of `locale` | Client sort comparator for two values. |
 | `searchText` | `(value, row) => string` | `String(value)` | Text the client search matches against. |

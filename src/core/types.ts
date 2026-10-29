@@ -24,6 +24,11 @@ export interface CellContext<R = Row> {
   td: HTMLTableCellElement;
   /** the grid's locale (typed columns format with it unless given their own) */
   locale?: string;
+  /**
+   * A field of a row as plain text. `value` arrives as text already, `row` as received: on an
+   * HTML-default source (yajra) its strings are server-escaped (`&amp;`) and may hold markup.
+   */
+  text(row: R, path: string): string;
 }
 
 export interface ColumnDef<R = Row> {

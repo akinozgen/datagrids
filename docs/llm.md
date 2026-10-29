@@ -110,7 +110,7 @@ Unknown options warn (DG001) with hints for legacy names (`ajax`, `serverSide`, 
 ColumnDef: `key` (required), `data` (dotted path, default key), `name` (server column name), `title`,
 `type`, `sortable`, `sortKey` (client sort field), `searchable`, `visible`, `hideable`, `exportable`,
 `align` (`start|end|center`), `className`, `defaultContent`, `can` (false → column does not exist anywhere),
-`html` / `text` (render mode), `sticky` (`start|end`), `render(value,row,ctx)` → `Node|string|number|null`,
+`html` / `text` (render mode), `sticky` (`start|end`), `render(value,row,ctx)` → `Node|string|number|null` (`ctx`: `row, key, index, position, td, locale, text(row, path)`; `value` is text already, `ctx.text` decodes other fields of escaped yajra rows),
 `lazy` (server-computed on demand, see `lazyColumns`), `value(row)`, `compare(a,b)`, `searchText(value,row)`, `exportValue(row)`, `exportType`
 (`string|number|money|date|boolean`), `exportFormat`, `labels`.
 
