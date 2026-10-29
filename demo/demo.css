@@ -31,6 +31,11 @@ section.demo > p.lead { margin: 0 0 12px; color: var(--page-muted); font-size: 1
 .demo-tools button, .demo-tools select { font: inherit; padding: 4px 10px; border: 1px solid #cfd4dc; border-radius: 6px; background: #fff; cursor: pointer; }
 .demo-log { margin-top: 8px; font: 12px ui-monospace, monospace; color: var(--page-muted); white-space: pre-wrap; max-height: 120px; overflow: auto; }
 .badge-done { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 99px; font-size: 10px; background: #dcfce7; color: #166534; vertical-align: middle; }
+.news-list { display: grid; gap: 28px; }
+.news-item { scroll-margin-top: 16px; }
+.news-item > h3 { font-size: 15px; margin: 0 0 4px; }
+.news-item > p.lead { margin: 0 0 10px; color: var(--page-muted); font-size: 13px; max-width: 80ch; }
+.demo-host-tip { position: absolute; z-index: 10; padding: 4px 8px; border-radius: 4px; background: #000; color: #fff; font-size: 12px; pointer-events: none; }
 .dark-zone { color-scheme: dark; background: #0f1115; color: #e6e8eb; border-color: #2a2e35; }
 @media (max-width: 900px) { .demo-shell { grid-template-columns: 1fr; } .demo-nav { position: static; height: auto; } }
 

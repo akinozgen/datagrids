@@ -20,8 +20,10 @@ import "./sections/light";
 import "./sections/should";
 import "./sections/can";
 import { buildOverview } from "./overview";
+import { buildNews } from "./sections/news";
 
 buildOverview();
+buildNews();
 
 const hash = location.hash;
 if (hash) requestAnimationFrame(() => document.querySelector(hash)?.scrollIntoView());
