@@ -120,7 +120,7 @@ export function columnFilters(opts: ColumnFiltersOptions = {}): AnyModule {
         for (const c of active) {
           const f = filters[c.key] as ColumnFilterValue;
           const chip = h("span", { class: "dg-filter-chip" }, h("span", { class: "dg-filter-chip-col" }, c.title), " ", h("span", null, fmtValue(c, f)));
-          const x = h("button", { type: "button", class: "dg-filter-chip-x", "aria-label": `${m.clear}: ${c.title}`, title: `${m.clear}: ${c.title}` });
+          const x = h("button", { type: "button", class: "dg-filter-chip-x", "aria-label": `${m.clear}: ${c.title}`, "data-dg-tip": `${m.clear}: ${c.title}` });
           x.append(frag(icons.x));
           x.addEventListener("click", () => grid.filters({ [c.key]: null }));
           chip.append(x);
@@ -139,7 +139,7 @@ export function columnFilters(opts: ColumnFiltersOptions = {}): AnyModule {
           if (!enabled(c)) continue;
           const th = tr.querySelector<HTMLElement>(`th[data-key="${CSS.escape(c.key)}"]`);
           if (!th || th.querySelector(".dg-colfilter")) continue;
-          const b = h("button", { type: "button", class: "dg-colfilter", "aria-haspopup": "dialog", "aria-expanded": "false", "aria-label": m.filter(c.title), title: m.filter(c.title) });
+          const b = h("button", { type: "button", class: "dg-colfilter", "aria-haspopup": "dialog", "aria-expanded": "false", "aria-label": m.filter(c.title), "data-dg-tip": m.filter(c.title) });
           b.append(frag(icons.filter));
           b.addEventListener("click", (e) => {
             e.stopPropagation();

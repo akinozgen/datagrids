@@ -93,7 +93,8 @@ test.describe("rowReorder", () => {
     const h = g.locator("tbody tr").first().locator(".dg-reorder");
     await expect(h).toBeVisible();
     await expect(h).toHaveAttribute("aria-disabled", "true");
-    await expect(h).toHaveAttribute("title", "Taşımak için “Sıra” sıralamasına dönün");
+    await expect(h).toHaveAttribute("data-dg-tip", "Taşımak için “Sıra” sıralamasına dönün");
+    await expect(h).toHaveAccessibleDescription("Taşımak için “Sıra” sıralamasına dönün");
     await expect(h).toHaveCSS("cursor", "not-allowed");
     await h.focus();
     await page.keyboard.press("Space");

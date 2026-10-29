@@ -2,7 +2,7 @@
 import type { DatagridApi, ModuleContext, Row } from "../../core/types";
 import { createPanel, rovingKeys, toolbarButton, type Panel } from "../../dom/popover";
 import { icons } from "../../dom/icons";
-import { frag, h, nextId } from "../../core/util";
+import { frag, h, nextId, setTip } from "../../core/util";
 import { buildSheet, exportRows, gridMode, type Sheet } from "./values";
 
 export interface ExportMessages {
@@ -143,7 +143,7 @@ function createMenu(ctx: ModuleContext, m: ExportMessages, place?: Pick<ExportOp
   button.id = `${id}-btn`;
   // the text is hidden on narrow grids (data-bp=xs); keep the name
   button.setAttribute("aria-label", m.menu);
-  button.title = m.menu;
+  setTip(button, m.menu);
   button.setAttribute("aria-haspopup", "menu");
   button.setAttribute("aria-controls", `${id}-menu`);
   const panel = createPanel(ctx.root, { role: "menu", id: `${id}-menu`, "aria-labelledby": button.id, "data-dg-menu": "export" });

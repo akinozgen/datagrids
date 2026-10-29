@@ -1,7 +1,7 @@
 // Drag-to-reorder rows: pointer (mouse + touch) and keyboard (Space/Enter grab, arrows move, Space/Enter drop, Esc cancel).
 import { warn } from "../core/warn";
 import type { ColumnDef, ModuleDef, Row } from "../core/types";
-import { decodeEntities, frag, getPath, h, htmlToText, nextId } from "../core/util";
+import { decodeEntities, frag, getPath, h, htmlToText, nextId, setTip } from "../core/util";
 import { icons } from "../dom/icons";
 
 export interface RowReorderMessages {
@@ -205,11 +205,12 @@ export function rowReorder(opts: RowReorderOptions): ModuleDef<"rowReorder", Row
         if (why) {
           b.setAttribute("aria-disabled", "true");
           b.removeAttribute("aria-describedby");
-          b.title = why; // the reason is the accessible description, and visible on hover
+          setTip(b, why, true); // the reason is the accessible description, and visible on hover
         } else {
           b.removeAttribute("aria-disabled");
           b.setAttribute("aria-describedby", helpId);
-          b.title = m.hint;
+          b.removeAttribute("aria-description");
+          setTip(b, m.hint);
         }
       };
       const syncAll = () => {
@@ -587,11 +588,11 @@ export function rowReorder(opts: RowReorderOptions): ModuleDef<"rowReorder", Row
         if (kb && e.target === kb.b && !kb.moving) cancelKb();
       }, sig);
 
-      // a disabled handle explains itself on click (touch has no hover title)
+      // a disabled handle explains itself on click (touch has no hover tooltip)
       root.addEventListener("click", (e) => {
         const b = (e.target as Element | null)?.closest?.(".dg-reorder");
         if (!b || !root.contains(b) || b.getAttribute("aria-disabled") !== "true") return;
-        ctx.announce(b.getAttribute("title") ?? "");
+        ctx.announce(b.getAttribute("data-dg-tip") ?? "");
       }, sig);
 
       const move: RowReorderApi["move"] = async (key, to) => {

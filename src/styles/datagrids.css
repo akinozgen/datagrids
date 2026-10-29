@@ -1023,6 +1023,24 @@ table.dg-table {
 .dg-panel-sep { block-size: 1px; margin: calc(0.25 * var(--dg-u)) calc(0.25 * var(--dg-u)); background: var(--dg-line); }
 .dg-panel-foot { display: flex; gap: calc(0.25 * var(--dg-u)); padding: calc(0.25 * var(--dg-u)); }
 .dg-grip { color: var(--dg-border-strong); cursor: grab; }
+
+/* kontrol ipucu: title yerine tek eleman, top layer (host'un [title] eklentileri dokunamaz) */
+.dg-tip {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  max-inline-size: calc(18 * var(--dg-u));
+  padding: calc(0.25 * var(--dg-u)) calc(0.5 * var(--dg-u));
+  border: 0;
+  border-radius: var(--dg-radius-sm);
+  background: var(--dg-fg);
+  color: var(--dg-bg);
+  font-size: var(--dg-font-size-sm);
+  line-height: var(--dg-line-height-tight);
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+.dg-tip:not([popover]) { z-index: 2147483647; }
 .dg-grip svg { inline-size: calc(0.875 * var(--dg-u)); block-size: calc(0.875 * var(--dg-u)); }
 
 /* ---------- RESPONSIVE DETAY (should) ---------- */
@@ -1225,6 +1243,7 @@ table.dg-table {
   .dg-check-input:indeterminate + .dg-check-box { background: Highlight; border-color: Highlight; color: HighlightText; }
   .dg-pager-btn[aria-current="page"] { background: Highlight; color: HighlightText; border-color: Highlight; }
   .dg-chip { border-color: CanvasText; }
+  .dg-tip { border: 1px solid CanvasText; }
   .dg-progress::before { background: Highlight; }
   [aria-sort="ascending"] .dg-sort-icon .dg-up,
   [aria-sort="descending"] .dg-sort-icon .dg-down { stroke: Highlight; }

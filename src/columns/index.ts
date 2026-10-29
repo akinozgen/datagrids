@@ -274,7 +274,7 @@ export function phone<R = Row>(key: string, o: PhoneOpts<R> = {}): ColumnDef<R> 
     render: (v) => {
       if (v == null || v === "") return null;
       const box = h("span", { class: "dg-phone" }, h("a", { class: "dg-link", href: `tel:+${digits(v)}` }, String(v)));
-      if (whatsapp) box.append(" ", h("a", { class: "dg-link dg-phone-wa", href: `https://wa.me/${digits(v)}`, target: "_blank", rel: "noopener", "aria-label": `WA (WhatsApp) ${v}`, title: "WhatsApp" }, "WA"));
+      if (whatsapp) box.append(" ", h("a", { class: "dg-link dg-phone-wa", href: `https://wa.me/${digits(v)}`, target: "_blank", rel: "noopener", "aria-label": `WA (WhatsApp) ${v}`, "data-dg-tip": "WhatsApp" }, "WA"));
       return box;
     },
     ...rest,

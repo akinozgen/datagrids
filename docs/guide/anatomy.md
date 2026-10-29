@@ -81,6 +81,7 @@ end-to-end tests. Internal custom properties (`--dg-_*`) and undocumented elemen
 
   <div class="dg-live dg-offscreen" role="status" aria-live="polite" aria-atomic="true"></div>
   <div class="dg-panel" popover="manual" role="menu|dialog">…</div>   <!-- top-layer panels live inside the root -->
+  <div class="dg-tip" popover="manual" aria-hidden="true">…</div>    <!-- the one tooltip of the grid's controls -->
   <dialog class="dg-dialog">…</dialog>                               <!-- confirm dialog -->
 </div>
 ```
@@ -120,8 +121,14 @@ end-to-end tests. Internal custom properties (`--dg-_*`) and undocumented elemen
     opened in the top layer with `popover="manual"` and positioned by script — no z-index fights.
 14. **Affordance:** every clickable thing has a permanent indicator (icon, checkbox or chevron), a
     hover background and `cursor: pointer`. Sortable headers show their ↕ icon even when unsorted.
-15. **Never emitted:** `dataTable` or `dt-*` classes and events, inline widths (except rule 10),
-    `@layer`, `!important` (except for reduced motion), tokens on `:root`.
+15. **Tooltips:** the grid's own controls never carry a native `title`. Their tooltip text is in
+    `data-dg-tip` and shows in the single `.dg-tip` element (top layer) on hover after 500 ms or at
+    once on keyboard focus; it hides on pointer leave, click, scroll, blur and `Escape`. A page-wide
+    `[title]` tooltip plugin therefore finds nothing in the grid to take over, and nothing is left
+    behind when a control under the pointer re-renders or turns disabled. The accessible name stays in
+    `aria-label`; where the tooltip adds information it is also the `aria-description`.
+16. **Never emitted:** `dataTable` or `dt-*` classes and events, inline widths (except rule 10),
+    `@layer`, `!important` (except for reduced motion), tokens on `:root`, `title` on grid controls.
 
 ## Safe customization examples
 

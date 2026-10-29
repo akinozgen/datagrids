@@ -2,6 +2,7 @@
 import type { ModuleDef } from "../core/types";
 import { icons } from "../dom/icons";
 import { createPanel, rovingKeys, toolbarButton } from "../dom/popover";
+import { setTip } from "../core/util";
 
 export interface ButtonMessages {
   reload: string;
@@ -75,7 +76,7 @@ export function resetState(opts: ButtonOptions = {}): ModuleDef<"resetStateButto
       const btn = toolbarButton({ label, icon: resetIcon });
       // the text is hidden on narrow roots: keep name + tooltip on the button itself
       btn.setAttribute("aria-label", label);
-      btn.title = m.resetStateTitle;
+      setTip(btn, m.resetStateTitle, true);
       btn.addEventListener("click", () => {
         const state = (ctx.grid as unknown as { state?: { reset(): Promise<void> } }).state;
         void state?.reset();

@@ -2,7 +2,7 @@
 // again flips its direction, a third time removes it. Secondary keys show their rank; aria-sort stays on
 // the primary column only (ARIA allows one), the rest is in the button's name and announced.
 import type { ModuleDef, SortSpec } from "../core/types";
-import { h } from "../core/util";
+import { h, setTip } from "../core/util";
 
 export interface MultiSortMessages {
   hint: string;
@@ -63,7 +63,7 @@ export function multiSort(opts: MultiSortOptions = {}): ModuleDef<"multiSort", M
         for (const th of Array.from(table.tHead?.rows[0]?.cells ?? [])) {
           const btn = th.querySelector<HTMLElement>(":scope > .dg-sort");
           if (!btn) continue;
-          btn.title = m.hint;
+          setTip(btn, m.hint, true);
           btn.querySelector(".dg-sort-rank")?.remove();
           btn.querySelector(".dg-sort-rank-sr")?.remove();
           const i = sort.findIndex((s) => s.key === th.getAttribute("data-key"));
@@ -111,7 +111,7 @@ export function multiSort(opts: MultiSortOptions = {}): ModuleDef<"multiSort", M
             th.removeAttribute("data-sort-rank");
             th.removeAttribute("data-sort-dir");
           }
-          for (const b of Array.from(table.querySelectorAll<HTMLElement>(".dg-sort[title]"))) b.removeAttribute("title");
+          for (const b of Array.from(table.querySelectorAll<HTMLElement>(".dg-sort[data-dg-tip]"))) setTip(b, null, true);
         },
       };
     },

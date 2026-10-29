@@ -136,7 +136,7 @@ export function actions<R = Row>(opts: ActionsOptions<R>): AnyModule {
           "data-action": it.id,
           "data-variant": it.tone === "danger" ? "danger" : null,
           "aria-disabled": r.reason !== null ? "true" : null,
-          title: labelled ? null : it.label,
+          "data-dg-tip": labelled ? null : it.label,
           "aria-label": labelled ? null : it.label,
         });
         if (it.icon) b.append(iconEl(it.icon));
@@ -182,7 +182,7 @@ export function actions<R = Row>(opts: ActionsOptions<R>): AnyModule {
             "aria-haspopup": "menu",
             "aria-expanded": "false",
             "aria-label": primary ? `${m.more}: ${labelOf(row)}` : m.forRow(labelOf(row)),
-            title: primary ? m.more : null,
+            "data-dg-tip": primary ? m.more : null,
             "data-icon-only": primary ? true : null,
           });
           if (primary) trig.append(frag(icons.more));

@@ -159,7 +159,7 @@ test.describe("stateSave", () => {
       w.grids.kolonlar!.on("load", () => w.__loads++);
     });
     const btn = grid.getByRole("button", { name: "Yenile" });
-    await expect(btn).toHaveAttribute("title", "Yenile");
+    await expect(btn).toHaveAttribute("data-dg-tip", "Yenile");
     await btn.click();
     await expect.poll(() => page.evaluate(() => (window as unknown as { __loads: number }).__loads)).toBe(1);
     await expect(grid.locator(".dg-info")).toHaveText("11–20 / 60 kayıt");

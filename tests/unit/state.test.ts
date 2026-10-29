@@ -399,7 +399,8 @@ describe("colVis", () => {
     resolve();
     await flush();
     const btn = g.root.querySelector<HTMLButtonElement>('.dg-btn[aria-label="Yenile"]')!;
-    expect(btn.title).toBe("Yenile");
+    expect(btn.getAttribute("data-dg-tip")).toBe("Yenile");
+    expect(btn.hasAttribute("title")).toBe(false);
     btn.click();
     expect(calls).toBe(2);
     expect(btn.querySelector("svg")!.classList.contains("dg-spin")).toBe(true);

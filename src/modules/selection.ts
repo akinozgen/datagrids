@@ -2,7 +2,7 @@
 import { notice } from "../core/warn";
 import type { DatagridApi, ModuleDef, Query, Row, SortSpec } from "../core/types";
 import { config } from "../core/config";
-import { decodeEntities, frag, getPath, h, htmlToText, toggleAttr } from "../core/util";
+import { decodeEntities, frag, getPath, h, htmlToText, setTip, toggleAttr } from "../core/util";
 import { icons, type IconName } from "../dom/icons";
 
 export interface SelectionMessages {
@@ -306,7 +306,7 @@ export function selection(opts: SelectionOptions = {}): ModuleDef<"selection", S
           btn.append(frag(svg), h("span", { class: "dg-btn-text" }, a.label));
           // the text hides on narrow roots; keep the name
           btn.setAttribute("aria-label", a.label);
-          btn.title = a.label;
+          setTip(btn, a.label);
         } else btn.textContent = a.label;
         btn.addEventListener("click", () => {
           if (btn.disabled || busy) return;

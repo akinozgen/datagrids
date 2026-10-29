@@ -61,6 +61,12 @@ export function toggleAttr(el: Element, name: string, on: boolean, value = ""): 
   else el.removeAttribute(name);
 }
 
+/** Grid tooltip (`data-dg-tip`, see dom/tooltip); `describe` also makes it the accessible description, as `title` did. */
+export function setTip(el: Element, text: string | null, describe = false): void {
+  toggleAttr(el, "data-dg-tip", !!text, text ?? "");
+  if (describe) toggleAttr(el, "aria-description", !!text, text ?? "");
+}
+
 let uid = 0;
 export const nextId = (prefix = "dg"): string => `${prefix}${++uid}`;
 

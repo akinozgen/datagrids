@@ -149,7 +149,7 @@ export function toolbarButton(o: {
     "data-variant": o.variant ?? null,
     "data-icon-only": o.iconOnly ?? false,
     "aria-label": o.iconOnly ? o.label : null,
-    title: o.iconOnly ? o.label : null,
+    "data-dg-tip": o.iconOnly ? o.label : null,
   });
   if (o.icon) b.insertAdjacentHTML("beforeend", o.icon);
   if (!o.iconOnly) b.append(h("span", { class: "dg-btn-text" }, o.label));

@@ -12,6 +12,7 @@ import { icons } from "./dom/icons";
 import { arraySourceDef, domSourceDef } from "./data/sources";
 import { httpError, fetchError } from "./data/errors";
 import { confirmDialog } from "./dom/dialog";
+import { installTips } from "./dom/tooltip";
 import { cellValue, runClient } from "./data/client";
 import * as columnFactories from "./columns/index";
 
@@ -248,6 +249,7 @@ export class Datagrid implements DatagridApi {
     }
     this.frame.prepend(skip);
     a.append(this.toolbarEl, this.aboveEl, this.frame, after, this.footerEl, this.live);
+    installTips(a, this.ac.signal);
     table.parentNode?.insertBefore(a, table);
     this.scroller.append(table);
     this.journal.set(table, "class", (table.getAttribute("class") ? table.getAttribute("class") + " " : "") + "dg-table");
@@ -1078,7 +1080,7 @@ export class Datagrid implements DatagridApi {
   showBanner(err: DatagridError, title = this.messages.error): void {
     this.aboveEl.querySelector(".dg-banner[data-kind=error]")?.remove();
     const retry = h("button", { type: "button", class: "dg-btn", "data-variant": "ghost" }, this.messages.retry);
-    const close = h("button", { type: "button", class: "dg-btn", "data-variant": "ghost", "data-icon-only": true, "aria-label": this.messages.clear, title: this.messages.clear });
+    const close = h("button", { type: "button", class: "dg-btn", "data-variant": "ghost", "data-icon-only": true, "aria-label": this.messages.clear, "data-dg-tip": this.messages.clear });
     close.append(frag(icons.x));
     const banner = h("div", { class: "dg-banner", "data-tone": err.kind === "session" ? "warn" : "bad", "data-kind": "error", role: "alert" });
     banner.append(frag(icons.alert), h("div", { class: "dg-banner-text" }, h("strong", null, title), " ", err.message), err.retryable ? retry : "", close);
@@ -1490,7 +1492,7 @@ export class Datagrid implements DatagridApi {
         dir: "auto",
       });
       input.value = this.st.search;
-      const clear = h("button", { type: "button", class: "dg-search-clear", "aria-label": this.messages.clear, title: this.messages.clear });
+      const clear = h("button", { type: "button", class: "dg-search-clear", "aria-label": this.messages.clear, "data-dg-tip": this.messages.clear });
       clear.append(frag(icons.x));
       const label = h("label", { class: "dg-search" });
       label.append(frag(icons.search), input, clear);
@@ -1600,7 +1602,7 @@ export class Datagrid implements DatagridApi {
     const p = this.st.page;
     const atEnd = pages == null ? this.st.hasMore === false : p >= pages;
     const btn = (go: string, label: string, icon: string, disabled: boolean) => {
-      const b = h("button", { type: "button", class: "dg-pager-btn", "data-go": go, "aria-label": label, title: label, disabled });
+      const b = h("button", { type: "button", class: "dg-pager-btn", "data-go": go, "aria-label": label, "data-dg-tip": label, disabled });
       b.append(frag(icon));
       return b;
     };

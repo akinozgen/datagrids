@@ -1,7 +1,7 @@
 // Column visibility menu: popover + fieldset + native checkboxes.
 import type { DatagridApi, ModuleDef, ResolvedColumn } from "../core/types";
 import { fold } from "../core/collate";
-import { frag, h, nextId } from "../core/util";
+import { frag, h, nextId, setTip } from "../core/util";
 import { icons } from "../dom/icons";
 import { createPanel, toolbarButton } from "../dom/popover";
 
@@ -79,7 +79,7 @@ export function colVis(opts: ColVisOptions = {}): ModuleDef<"colVis", ColVisApi>
       const trigger = toolbarButton({ label: m.button, icon: icons.columns, caret: true, badge: "" });
       trigger.setAttribute("aria-haspopup", "dialog");
       trigger.setAttribute("aria-controls", panelId);
-      trigger.title = m.legend;
+      setTip(trigger, m.legend, true);
       const badge = trigger.querySelector<HTMLElement>(".dg-btn-badge")!;
       // name = text + badge even when the narrow root hides the text; labelledby reads hidden nodes
       const textEl = trigger.querySelector<HTMLElement>(".dg-btn-text")!;
@@ -138,7 +138,7 @@ export function colVis(opts: ColVisOptions = {}): ModuleDef<"colVis", ColVisApi>
               h("span", { class: "dg-panel-item-label", dir: "auto" }, c.title));
             if (!c.hideable) {
               row.setAttribute("data-locked", "");
-              row.title = m.locked;
+              setTip(row, m.locked);
               row.append(frag(icons.lock), h("span", { class: "dg-offscreen" }, ` (${m.locked})`));
             }
             const ro = reorder();
@@ -152,7 +152,7 @@ export function colVis(opts: ColVisOptions = {}): ModuleDef<"colVis", ColVisApi>
                 class: "dg-move",
                 "data-dir": dir < 0 ? "earlier" : "later",
                 "aria-label": dir < 0 ? ro.messages.earlier(c.title) : ro.messages.later(c.title),
-                title: dir < 0 ? ro.messages.earlier(c.title) : ro.messages.later(c.title),
+                "data-dg-tip": dir < 0 ? ro.messages.earlier(c.title) : ro.messages.later(c.title),
               });
               b.append(frag(dir < 0 ? icons.up : icons.down));
               b.disabled = i < 0 || (dir < 0 ? i === 0 : i === mov.length - 1);

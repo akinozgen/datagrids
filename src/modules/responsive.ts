@@ -1,7 +1,7 @@
 // Responsive columns: when the table is wider than its frame, the least important columns collapse and each
 // row gets an expand button that shows them in a detail row. colVis choices are not touched.
 import type { ModuleDef, ResolvedColumn } from "../core/types";
-import { frag, h, nextId } from "../core/util";
+import { frag, h, nextId, setTip } from "../core/util";
 import { icons } from "../dom/icons";
 
 export interface ResponsiveMessages {
@@ -117,7 +117,7 @@ export function responsive(opts: ResponsiveOptions = {}): ModuleDef<"responsive"
         if (btn) {
           btn.setAttribute("aria-expanded", String(isOpen));
           btn.setAttribute("aria-label", isOpen ? m.hide : m.show);
-          btn.title = isOpen ? m.hide : m.show;
+          setTip(btn, isOpen ? m.hide : m.show);
         }
         if (isOpen) {
           const fresh = buildDetail(row, key);

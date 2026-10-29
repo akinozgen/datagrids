@@ -92,7 +92,7 @@ export function colReorder(opts: ColReorderOptions = {}): ModuleDef<"colReorder"
             const c = grid.columns().find((x) => x.key === th.getAttribute("data-key"));
             if (!c || !isMovable(c)) continue;
             th.setAttribute("data-dg-movable", "");
-            const grip = h("span", { class: "dg-col-grip", "aria-hidden": "true", title: m.hint });
+            const grip = h("span", { class: "dg-col-grip", "aria-hidden": "true", "data-dg-tip": m.hint });
             grip.append(frag(icons.grip));
             // inside the sort button the grip is one more flex item; plain headers get it before the text
             (th.querySelector<HTMLElement>(":scope > .dg-sort") ?? th).prepend(grip);

@@ -80,7 +80,9 @@ describe("rowReorder: handles", () => {
     expect(api(g).enabled()).toBe(false);
     const b = handle(t, 0);
     expect(b.getAttribute("aria-disabled")).toBe("true");
-    expect(b.title).toBe("Taşımak için “Sıra” sıralamasına dönün");
+    expect(b.getAttribute("data-dg-tip")).toBe("Taşımak için “Sıra” sıralamasına dönün");
+    expect(b.getAttribute("aria-description")).toBe("Taşımak için “Sıra” sıralamasına dönün");
+    expect(b.hasAttribute("title")).toBe(false);
     expect(b.hasAttribute("aria-describedby")).toBe(false);
     // keyboard: explains instead of grabbing
     b.focus();
@@ -98,7 +100,7 @@ describe("rowReorder: handles", () => {
     await flush();
     expect(api(g).enabled()).toBe(true);
     g.sort([["sira", "asc"]]);
-    expect(handle(t, 0).title).toBe("Sıralı görünümde satırlar taşınamaz");
+    expect(handle(t, 0).getAttribute("data-dg-tip")).toBe("Sıralı görünümde satırlar taşınamaz");
   });
 });
 
@@ -149,7 +151,7 @@ describe("rowReorder: client mode", () => {
     await flush();
     expect(names(t)[3]).toBe("Jill Valentine");
     expect(api(g).enabled()).toBe(false);
-    expect(handle(t, 0).title).toBe("Sıra kaydediliyor…");
+    expect(handle(t, 0).getAttribute("data-dg-tip")).toBe("Sıra kaydediliyor…");
     expect(t.tBodies[0]!.rows[3]!.getAttribute("aria-busy")).toBe("true");
     reject(new Error("sunucu 500"));
     expect(await done).toBe(false);
