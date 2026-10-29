@@ -697,6 +697,9 @@ table.dg-table {
 }
 .dg-cellbtn > svg { inline-size: calc(0.875 * var(--dg-u)); block-size: calc(0.875 * var(--dg-u)); color: var(--dg-muted-fg); }
 .dg-cellbtn:hover { background: var(--dg-muted); border-color: var(--dg-border-hover); }
+/* href aksiyonları gerçek bağlantı: host'un a / a:hover / a:visited renkleri ve altı çizgisi tutmaz */
+.dg-cellbtn:any-link,
+.dg-panel-item:any-link { color: var(--dg-fg); text-decoration: none; }
 .dg-cellbtn:focus { outline: 2px solid transparent; }
 .dg-cellbtn:focus-visible { border-color: var(--dg-accent-ink); box-shadow: 0 0 0 3px var(--dg-ring); }
 .dg-cellbtn[data-icon-only] { inline-size: var(--dg-cell-btn-h); padding: 0; justify-content: center; }

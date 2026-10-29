@@ -128,10 +128,20 @@ export function actions<R = Row>(opts: ActionsOptions<R>): AnyModule {
         return f;
       };
 
+      /** An enabled `href` action is a real link: new tab, copy link and the status bar URL keep working. */
+      const linkAttrs = (r: Resolved, row: Row) =>
+        r.item.href && r.reason === null
+          ? { href: fill(r.item.href, row, true, text), target: r.item.target ?? null, rel: r.item.target ? "noopener" : null }
+          : null;
+
+      // a plain click still runs through `run` (confirm, beforeAction); modified and middle clicks stay native
+      const plainClick = (e: MouseEvent) => e.button === 0 && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey;
+
       const cellButton = (r: Resolved, row: Row, key: string, labelled = true) => {
         const it = r.item;
-        const b = h("button", {
-          type: "button",
+        const link = linkAttrs(r, row);
+        const b = h(link ? "a" : "button", {
+          ...(link ?? { type: "button" }),
           class: "dg-cellbtn",
           "data-action": it.id,
           "data-variant": it.tone === "danger" ? "danger" : null,
@@ -151,6 +161,10 @@ export function actions<R = Row>(opts: ActionsOptions<R>): AnyModule {
           if (r.reason !== null) {
             showNote(b, r.reason || it.label);
             return;
+          }
+          if (link) {
+            if (!plainClick(e as MouseEvent)) return;
+            e.preventDefault();
           }
           void api.run(it.id, key);
         });
@@ -231,8 +245,9 @@ export function actions<R = Row>(opts: ActionsOptions<R>): AnyModule {
           lastGroup = it.group;
           lastDanger = it.tone === "danger";
           const id = `${menu.el.id || "m"}-${it.id}`;
-          const btn = h("button", {
-            type: "button",
+          const link = linkAttrs(r, row);
+          const btn = h(link ? "a" : "button", {
+            ...(link ?? { type: "button" }),
             role: "menuitem",
             tabindex: "-1",
             class: "dg-panel-item",
@@ -249,8 +264,12 @@ export function actions<R = Row>(opts: ActionsOptions<R>): AnyModule {
             body.append(rs);
           }
           btn.append(body);
-          btn.addEventListener("click", () => {
+          btn.addEventListener("click", (e) => {
             if (r.reason !== null) return;
+            if (link) {
+              if (!plainClick(e as MouseEvent)) return;
+              e.preventDefault();
+            }
             menu.hide(true);
             void api.run(it.id, key);
           });
@@ -363,7 +382,7 @@ export function actions<R = Row>(opts: ActionsOptions<R>): AnyModule {
               // the row (or, after a delete, the row now in its place) gets the focus back on its actions
               const rows = ctx.table.tBodies[0] ? Array.from(ctx.table.tBodies[0].rows).filter((r) => r.hasAttribute("data-key")) : [];
               const target = tr ?? rows[Math.min(Math.max(rowIndex, 0), rows.length - 1)];
-              const ctl = target?.querySelector<HTMLElement>("td[data-col=actions] button:not([disabled])");
+              const ctl = target?.querySelector<HTMLElement>("td[data-col=actions] :is(button:not([disabled]), a[href])");
               (ctl ?? ctx.root.querySelector<HTMLElement>(".dg-scroll"))?.focus({ preventScroll: true });
             }
           }

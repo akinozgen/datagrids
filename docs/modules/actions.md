@@ -57,7 +57,11 @@ new Datagrid("#agents", {
 `{field}` placeholders read the row (dotted paths work). In `href` and `request.url` the values
 are URL-encoded; in `confirm` and `success` texts they are inserted as plain text.
 
-- **`href`** navigates (`target: "_blank"` opens a new tab with `noopener`).
+- **`href`** navigates (`target: "_blank"` opens a new tab with `noopener`). An enabled `href`
+  action is a real `<a href>`, inline and in the menu, so middle-click, Ctrl/⌘-click, "Copy link"
+  and the status-bar URL work as on any link. A plain click still goes through `confirm` and
+  `beforeAction`; a modified or middle click opens the link directly, without them. A disabled
+  `href` action stays a button that explains why.
 - **`request`** runs [`grid.action()`](/reference/methods): same-origin only, `X-CSRF-TOKEN` from
   `<meta name="csrf-token">`, JSON body, then a success notice and a reload that keeps the page.
 - **`handler(row, { grid, key })`** runs your code; return a promise to keep the row busy until it
@@ -145,7 +149,7 @@ banner above the table.
 | `primary` | `boolean` | The labelled button next to `⋯` when the actions don't fit inline. |
 | `can` | `boolean \| (row) => boolean` | Hides the action. |
 | `disabled` | `(row) => boolean \| string \| null` | Visible but inactive; a string is the reason. |
-| `href` | `string` | URL template; navigates. |
+| `href` | `string` | URL template; rendered as a real link (see above). |
 | `target` | `string` | Window target for `href`. |
 | `request` | `{ url, method?, body? }` | `method` defaults to `POST`; `body` is an object or `(row) => object`. |
 | `handler` | `(row, { grid, key }) => unknown` | Your code; may return a promise. |
