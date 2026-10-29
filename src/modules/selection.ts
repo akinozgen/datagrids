@@ -315,7 +315,8 @@ export function selection(opts: SelectionOptions = {}): ModuleDef<"selection", S
             busy = true;
             btn.setAttribute("aria-busy", "true");
             syncBar();
-            void (out as Promise<unknown>).catch(() => {}).finally(() => {
+            // any thenable (a dialog library's promise may lack catch/finally)
+            void Promise.resolve(out).catch(() => {}).finally(() => {
               busy = false;
               btn.removeAttribute("aria-busy");
               syncBar();

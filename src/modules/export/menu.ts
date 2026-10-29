@@ -178,8 +178,7 @@ function createMenu(ctx: ModuleContext, m: ExportMessages, place?: Pick<ExportOp
     const icon = button.firstElementChild!;
     const spin = frag(icons.spinner).firstElementChild!;
     icon.replaceWith(spin);
-    item
-      .run()
+    Promise.resolve(item.run())
       .catch(() => {})
       .finally(() => {
         menu.busy = false;

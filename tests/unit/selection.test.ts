@@ -262,6 +262,26 @@ describe("selection()", () => {
     expect(onClick.mock.calls[0]![1]).toBe(g);
   });
 
+  it("a bulk handler returning a bare thenable (no catch/finally) is awaited and releases the busy state", async () => {
+    let settle!: () => void;
+    // what some dialog libraries return: only `then`
+    const thenable = { then: (ok: () => void) => void (settle = ok) };
+    const onClick = vi.fn(() => thenable);
+    const { t, g } = await make({ bulk: { actions: [{ id: "sil", label: "Sil", onClick }] } });
+    const btn = g.root.querySelector<HTMLButtonElement>(".dg-bulk-actions .dg-btn")!;
+    rowInputs(t)[0]!.click();
+    btn.click();
+    await flush();
+    expect(btn.getAttribute("aria-busy")).toBe("true");
+    btn.click(); // ignored while busy
+    expect(onClick).toHaveBeenCalledTimes(1);
+    settle();
+    await flush();
+    expect(btn.hasAttribute("aria-busy")).toBe(false);
+    btn.click();
+    expect(onClick).toHaveBeenCalledTimes(2);
+  });
+
   it("bulk:false mounts no bar", async () => {
     const { g } = await make({ bulk: false });
     expect(g.root.querySelector(".dg-bulk")).toBeNull();

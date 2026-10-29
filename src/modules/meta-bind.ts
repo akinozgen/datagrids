@@ -81,7 +81,7 @@ export function metaBind(bindings: Record<string, MetaBinding>, opts: MetaBindOp
           }
           const write = (x: unknown) => run === seq && put(sel, formatMeta(x, fmt, ctx.locale, opts));
           // async values (client grids: `grid.exportRows("all")`); a newer refresh wins
-          if (v instanceof Promise) void v.then(write);
+          if (v && typeof (v as PromiseLike<unknown>).then === "function") void Promise.resolve(v).then(write, (e) => console.error(e));
           else write(v);
         }
       };
