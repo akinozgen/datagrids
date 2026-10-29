@@ -14,6 +14,7 @@ export const WARNINGS = {
   DG012: "Server error: {detail}",
   DG013: "Page size {size} exceeds maxPageSize {max}; clamped.",
   DG014: "Could not write grid state to storage ({reason}).",
+  DG015: "`{tag}` is not a valid locale; it is ignored.",
 } as const;
 
 export type WarningCode = keyof typeof WARNINGS;

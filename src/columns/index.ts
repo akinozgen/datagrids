@@ -3,6 +3,7 @@ import type { ColumnDef, Row, Tone } from "../core/types";
 import { frag, getPath, h, htmlToText } from "../core/util";
 import { icons } from "../dom/icons";
 import { parseNumber, readNumber } from "../core/collate";
+import { resolveLocale } from "../core/i18n";
 
 type Opts<R = Row> = Partial<Omit<ColumnDef<R>, "key">>;
 
@@ -302,7 +303,7 @@ export function parseBool(v: unknown): boolean | null {
 /** Yes/no with a permanent icon + text (colour is never the only signal). */
 export function boolean<R = Row>(key: string, o: BooleanOpts<R> = {}): ColumnDef<R> {
   const { labels, showFalse = true, ...rest } = o;
-  const tr = () => (document.documentElement.lang || (typeof navigator !== "undefined" ? navigator.language : "") || "tr").startsWith("tr");
+  const tr = () => resolveLocale([document.documentElement.lang], true).startsWith("tr");
   const label = (b: boolean) => labels?.[b ? "true" : "false"] ?? (tr() ? (b ? "Evet" : "Hayır") : b ? "Yes" : "No");
   return {
     type: "boolean",

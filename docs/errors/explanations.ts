@@ -205,7 +205,7 @@ export const explanations: Record<string, Explanation> = {
       "The page's `<html>` element has no `lang` attribute while the grid uses uppercase headers (the default",
       "`head: \"caps\"`). Uppercasing in CSS depends on the language: in Turkish `i` becomes `İ`, elsewhere `I`, so",
       "a header can come out wrong. Without `lang`, and without a `locale` option or `configure({ locale })`, the",
-      "grid also falls back to the Turkish message pack.",
+      "grid also takes the browser's language (English when that is unusable).",
     ),
     fix: lines(
       "Declare the page language: `<html lang=\"en\">`. Or switch to sentence-case headers with",
@@ -258,6 +258,19 @@ export const explanations: Record<string, Explanation> = {
       "Nothing breaks: the grid works, the view is just not remembered. Pass another `Storage`",
       "(`stateSave({ storage: sessionStorage })`) or `storage: null` to turn persistence off deliberately.",
       "See [stateSave](/modules/state-save).",
+    ),
+  },
+  DG015: {
+    title: "Invalid locale",
+    kind: "warning",
+    when: lines(
+      "The `locale` option, `configure({ locale })` or `<html lang>` holds a value the `Intl` APIs reject",
+      "(`<html lang=\"1\">`, `locale: \"tr_TR\"`). Number and date formatting would throw on it, so the grid",
+      "skips it and takes the next candidate: the browser's language, then `\"en\"`.",
+    ),
+    fix: lines(
+      "Use a BCP 47 tag (`tr`, `tr-TR`, `en-GB`). When the value comes from user settings, validate it on the",
+      "server before writing it into the page.",
     ),
   },
 };

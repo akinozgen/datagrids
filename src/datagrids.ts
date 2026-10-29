@@ -3,7 +3,7 @@ import type {
   GridStatus, HostAdapters, LoadResult, ModuleContext, ModuleInput, Query, RequestMiddleware, ResolvedColumn,
   Row, RowContext, SortInput, SortSpec, StateContribution, ToolbarItem,
 } from "./core/types";
-import { en, mergeMessages, tr as trMessages, type Messages } from "./core/i18n";
+import { en, mergeMessages, resolveLocale, tr as trMessages, type Messages } from "./core/i18n";
 import { config } from "./core/config";
 import { byName, byTable } from "./core/registry";
 import { fail, notice, suggest, warn } from "./core/warn";
@@ -190,7 +190,7 @@ export class Datagrid implements DatagridApi {
     this.o = options;
     this.table = table;
     this.name = options.name;
-    this.locale = options.locale ?? config.locale ?? (document.documentElement.lang || "tr");
+    this.locale = resolveLocale([options.locale, config.locale, document.documentElement.lang]);
     const base = this.locale.startsWith("tr") ? trMessages : en;
     this.messages = mergeMessages(base, config.messages, options.messages);
     this.host = { ...pickHost(config), ...(options.host ?? {}) };

@@ -90,7 +90,7 @@ Put the data source in `use: [...]` (or chain `.use(source)`: it replaces the de
 | `maxHeight` | CSS length | — | body scrolls, sticky header |
 | `errorMode` | `"inline" \| "silent" \| "throw"` | `"inline"` | |
 | `messages` | `Partial<Messages>` | locale pack | |
-| `locale` | `string` | `configure` → `<html lang>` → `"tr"` | `tr*` → Turkish pack, else English |
+| `locale` | `string` | `configure` → `<html lang>` → `navigator.language` → `"en"` (invalid tags skipped, DG015) | `tr*` → Turkish pack, else English |
 | `host` | `HostAdapters` | from `configure` | per-grid confirm/notify/csrf/laravel/timeout/fetch |
 | `surface` | `"plain" \| "card"` | plain | |
 | `size` | `"sm" \| "md" \| "lg"` | md | |

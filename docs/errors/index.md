@@ -1,7 +1,7 @@
 ---
 title: Warning codes
 type: reference
-description: Every coded datagrids console warning and thrown error (DG001–DG014) with its message, cause and fix, plus the uncoded module messages.
+description: Every coded datagrids console warning and thrown error (DG001–DG015) with its message, cause and fix, plus the uncoded module messages.
 ---
 
 # Warning codes
@@ -11,7 +11,7 @@ page (`/errors/DG008`); this page lists them all.
 
 | Kind | How it surfaces | Codes |
 |---|---|---|
-| Console warning | `console.warn`, printed **once per distinct message** | DG001, DG002, DG003, DG004, DG006, DG011, DG012, DG013, DG014 |
+| Console warning | `console.warn`, printed **once per distinct message** | DG001, DG002, DG003, DG004, DG006, DG011, DG012, DG013, DG014, DG015 |
 | Thrown error | `throw new Error(message)` — wiring mistakes never half-work | DG005, DG007, DG008, DG009, DG010 |
 
 Warnings are on by default. `configure({ warnings: false })` silences every coded warning (and the
@@ -219,7 +219,7 @@ modules already use free names (`state`, `colVis`, `selection`, …). See
 **When:** the page's `<html>` element has no `lang` attribute while the grid uses uppercase headers
 (the default `head: "caps"`). Uppercasing in CSS depends on the language: in Turkish `i` becomes
 `İ`, elsewhere `I`, so a header can come out wrong. Without `lang`, and without a `locale` option or
-`configure({ locale })`, the grid also falls back to the Turkish message pack.
+`configure({ locale })`, the grid also takes the browser's language (English when that is unusable).
 
 **Fix:** declare the page language: `<html lang="en">`. Or switch to sentence-case headers with
 `head: "sentence"`. Set `locale` when a grid's language differs from the page's.
@@ -274,6 +274,21 @@ browsing modes). **The current version prints an uncoded message instead**:
 
 **Fix:** nothing breaks: the grid works, the view is just not remembered. Pass another `Storage`
 (`stateSave({ storage: sessionStorage })`) or `storage: null` to turn persistence off deliberately.
+
+## DG015
+
+**Invalid locale** · console warning
+
+```text
+[datagrids DG015] `{tag}` is not a valid locale; it is ignored.
+```
+
+**When:** the `locale` option, `configure({ locale })` or `<html lang>` holds a value the `Intl` APIs
+reject (`<html lang="1">`, `locale: "tr_TR"`). Number and date formatting would throw on it, so the
+grid skips it and takes the next candidate: the browser's language, then `"en"`.
+
+**Fix:** use a BCP 47 tag (`tr`, `tr-TR`, `en-GB`). When the value comes from user settings,
+validate it on the server before writing it into the page.
 
 ## Other console messages
 

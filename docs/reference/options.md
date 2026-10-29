@@ -109,7 +109,7 @@ The options map to root attributes (`data-size`, `data-density`, `data-dg-theme`
 
 | Option | Type | Default | Description |
 |---|---|---|---|
-| `locale` | `string` (BCP 47) | `configure({ locale })`, else `<html lang>`, else `"tr"` | Number formatting in the footer and pager, search folding and client sorting. Locales starting with `tr` get the Turkish message pack, all others English. Column formats are separate: see [Column options](/reference/columns#formatting-locale). |
+| `locale` | `string` (BCP 47) | `configure({ locale })`, else `<html lang>`, else the browser's language, else `"en"` | Number formatting in the footer and pager, search folding and client sorting. Locales starting with `tr` get the Turkish message pack, all others English. Column formats are separate: see [Column options](/reference/columns#formatting-locale). |
 | `messages` | `Partial<Messages>` | — | Overrides individual UI strings, merged over the pack and `configure({ messages })`. See [Messages](/reference/messages). |
 
 ## Host adapters
@@ -146,8 +146,8 @@ Other near-misses get a suggestion (`pagesize` → "Did you mean `pageSize`?").
 - **`data` plus a source in `use`**: the source wins and `data` is dropped silently.
 - **A huge initial `pageSize`** is clamped to `maxPageSize` like a later `pageSize(n)` call
   ([DG013](/errors/DG013)); raise `maxPageSize` for a bigger page.
-- **`locale` falls back to Turkish** when neither the option, `configure({ locale })` nor `<html lang>`
-  is set.
+- **`locale` falls back to the browser's language** (then English) when neither the option,
+  `configure({ locale })` nor `<html lang>` holds a valid tag; invalid tags warn ([DG015](/errors/DG015)).
 
 ## Related
 

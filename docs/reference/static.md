@@ -93,7 +93,7 @@ Sets host-wide defaults and returns the resulting config. Keys you leave out (or
 | `onSessionExpired` | — | `(error) => void`. Called when a load gets 401, 419 or a redirect to a login page; the `sessionexpired` event fires as well. |
 | `fetch` | `globalThis.fetch` | Replaces `fetch` for server sources, `fetchAll` and `grid.action()` (tests, auth wrappers). |
 | `messages` | — | `Partial<Messages>`: UI string overrides for every grid, merged over the language pack. |
-| `locale` | `<html lang>`, else `"tr"` | Default locale of every grid. |
+| `locale` | `<html lang>`, else the browser's language, else `"en"` | Default locale of every grid. |
 | `pageSize` | `25` | Default rows per page. |
 | `pageSizes` | `[10, 25, 50, 100]` | Default page-size menu. |
 | `maxPageSize` | `1000` | Default page size limit and server "export all" row limit. |

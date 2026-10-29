@@ -1,3 +1,5 @@
+import { warn } from "./warn";
+
 export interface Messages {
   search: string;
   searchLabel: string;
@@ -168,4 +170,25 @@ export function mergeMessages(base: Messages, ...over: Array<Partial<Messages> |
     }
   }
   return out as unknown as Messages;
+}
+
+/** A tag the Intl APIs accept, canonicalised; null for empty or invalid tags (`<html lang="1">`). */
+export function canonicalLocale(tag: string | null | undefined): string | null {
+  if (!tag) return null;
+  try {
+    return Intl.getCanonicalLocales(tag)[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** First valid candidate, else the browser's language, else "en"; invalid candidates warn (DG015). */
+export function resolveLocale(candidates: (string | null | undefined)[], quiet = false): string {
+  for (const t of candidates) {
+    if (!t) continue;
+    const c = canonicalLocale(t);
+    if (c) return c;
+    if (!quiet) warn("DG015", { tag: t });
+  }
+  return canonicalLocale(typeof navigator !== "undefined" ? navigator.language : null) ?? "en";
 }
