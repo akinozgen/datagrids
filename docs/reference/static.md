@@ -92,6 +92,7 @@ Sets host-wide defaults and returns the resulting config. Keys you leave out (or
 | `timeout` | `30000` | Server request timeout in ms; `serverSide({ timeout })` overrides it. |
 | `onSessionExpired` | — | `(error) => void`. Called when a load gets 401, 419 or a redirect to a login page; the `sessionexpired` event fires as well. |
 | `fetch` | `globalThis.fetch` | Replaces `fetch` for server sources, `fetchAll` and `grid.action()` (tests, auth wrappers). |
+| `isError` | — | `(body, res) => boolean \| string \| null`. For `grid.action()` (and row actions with `request`): a 2xx response whose parsed body still reports a failure. Truthy = failed, a string is the message. Example: `(b) => b?.status === false && (b.error ?? true)`. |
 | `messages` | — | `Partial<Messages>`: UI string overrides for every grid, merged over the language pack. |
 | `locale` | `<html lang>`, else the browser's language, else `"en"` | Default locale of every grid. |
 | `pageSize` | `25` | Default rows per page. |
@@ -101,7 +102,7 @@ Sets host-wide defaults and returns the resulting config. Keys you leave out (or
 | `errorMode` | `"inline"` | `"inline"`, `"silent"` or `"throw"`; see [Grid options](/reference/options#loading). |
 
 **When a grid reads them:** the host adapters (`confirm`, `notify`, `csrf`, `laravel`, `timeout`,
-`onSessionExpired`, `fetch`), `messages`, `locale`, `pageSize` and `pageSizes` are read when a grid is
+`onSessionExpired`, `fetch`, `isError`), `messages`, `locale`, `pageSize` and `pageSizes` are read when a grid is
 created, so call `configure()` before creating grids. `errorMode`, `maxPageSize` and `warnings` are
 read when they are needed and also affect existing grids.
 

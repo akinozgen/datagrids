@@ -116,7 +116,7 @@ The options map to root attributes (`data-size`, `data-density`, `data-dg-theme`
 
 | Option | Type | Default | Description |
 |---|---|---|---|
-| `host` | `HostAdapters` | from `configure()` | Per-grid override of the global host adapters: `confirm`, `notify`, `csrf`, `laravel`, `timeout`, `onSessionExpired`, `fetch`. Keys are explained under [configure()](/reference/static#configure). |
+| `host` | `HostAdapters` | from `configure()` | Per-grid override of the global host adapters: `confirm`, `notify`, `csrf`, `laravel`, `timeout`, `onSessionExpired`, `fetch`, `isError`. Keys are explained under [configure()](/reference/static#configure). |
 
 ## Unknown options
 

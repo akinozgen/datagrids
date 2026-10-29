@@ -123,7 +123,7 @@ of the row. On a server source the protocol encodes the filters (functions are n
 
 | Member | Returns | Description |
 |---|---|---|
-| `action(url, options?)` | `Promise<unknown>` | Row action helper: optional confirm → same-origin request with `X-CSRF-TOKEN` (from `meta[name=csrf-token]`), `Accept: application/json` and `X-Requested-With` → success notification (the response's `message`, else `messages.actionDone`) → `reload({ keepPage: true })`. Resolves with the parsed response, `undefined` when the confirm was declined. Errors are notified and rethrown; 401/419 or a redirect to a login page also fire `sessionexpired` and call the `onSessionExpired` adapter. A redirect to any other page (a classic `return back()`) counts as success. |
+| `action(url, options?)` | `Promise<unknown>` | Row action helper: optional confirm → same-origin request with `X-CSRF-TOKEN` (from `meta[name=csrf-token]`), `Accept: application/json` and `X-Requested-With` → success notification (the response's `message`, else `messages.actionDone`) → `reload({ keepPage: true })`. Resolves with the parsed response, `undefined` when the confirm was declined. Errors are notified and rethrown; 401/419 or a redirect to a login page also fire `sessionexpired` and call the `onSessionExpired` adapter. A redirect to any other page (a classic `return back()`) counts as success. A 2xx whose body reports a failure counts only through an `isError` rule (below). |
 | `notify(kind, message)` | `void` | Uses the `notify` host adapter; without one it announces the message in the live region and shows errors as a banner above the table. `kind`: `"success" \| "error" \| "info"`. |
 | `confirm(message, options?)` | `Promise<boolean>` | Uses the `confirm` host adapter, else the built-in `<dialog>`. Options: `title`, `tone` (`"danger" \| "default"`), `confirmLabel`, `cancelLabel`, `subject`. |
 
@@ -137,6 +137,7 @@ of the row. On a server source the protocol encodes the filters (functions are n
 | `success` | `string \| false` | response `message` | Success text; `false` = no notification. |
 | `reload` | `false \| { keepPage?, silent? }` | `{ keepPage: true }` | Reload after success. |
 | `headers` | `Record<string, string>` | — | Extra request headers. |
+| `isError` | `(body, res) => boolean \| string \| null` | `configure({ isError })` | Decides whether a 2xx response failed after all (`{ status: false, error }`). Truthy = failure: the error is notified and thrown (`kind: "server"`, the body in `raw`) and nothing reloads; a string is the message, `true` uses `messages.actionFailed`. Without a rule every 2xx is a success. |
 
 The URL must be same-origin http(s).
 

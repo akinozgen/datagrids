@@ -813,6 +813,13 @@ export class Datagrid implements DatagridApi {
     } catch {
       out = null;
     }
+    // a 2xx that reports a failure in its body: the host's rule decides, no rule means success
+    const verdict = (o.isError ?? this.host.isError)?.(out, res);
+    if (verdict) {
+      const failed: DatagridError = { kind: "server", status: res.status, message: typeof verdict === "string" ? verdict : this.messages.actionFailed, retryable: false, raw: out };
+      this.notify("error", failed.message);
+      throw failed;
+    }
     if (o.success !== false) this.notify("success", o.success ?? (typeof out === "object" && out && typeof (out as { message?: unknown }).message === "string" ? (out as { message: string }).message : this.messages.actionDone));
     if (o.reload !== false) await this.reload({ keepPage: true, ...(o.reload ?? {}) });
     return out;
@@ -1786,8 +1793,8 @@ function normalizeSort(s: SortInput): SortSpec[] {
 }
 
 function pickHost(c: typeof config): HostAdapters {
-  const { confirm, notify, csrf, laravel, timeout, onSessionExpired, fetch } = c;
-  return { confirm, notify, csrf, laravel, timeout, onSessionExpired, fetch };
+  const { confirm, notify, csrf, laravel, timeout, onSessionExpired, fetch, isError } = c;
+  return { confirm, notify, csrf, laravel, timeout, onSessionExpired, fetch, isError };
 }
 
 function noopApi(): unknown {

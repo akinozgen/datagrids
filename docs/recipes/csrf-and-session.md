@@ -108,6 +108,8 @@ for the error states and `errorMode`.
   the `onSessionExpired` adapter and reports the error through `notify`. A redirect to any other
   page (a classic controller answering with `return back()`) counts as success, like the jQuery
   call it replaces; grid loads still treat it as `forbidden`.
+- **Failures inside a 200:** controllers that answer `200 { status: false, error: "…" }` need a rule,
+  or the action counts as done: `configure({ isError: (b) => b?.status === false && (b.error ?? true) })`.
 - **Don't exclude grid routes from CSRF verification** to make a list work: send the token instead
   and keep the endpoints protected.
 

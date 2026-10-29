@@ -152,7 +152,14 @@ export interface HostAdapters {
   timeout?: number;
   onSessionExpired?: (error: DatagridError) => void;
   fetch?: typeof fetch;
+  /**
+   * `grid.action()`: a 2xx response whose body still reports a failure (`{ status: false, error }`).
+   * Truthy = failed; a string is the message shown. HTTP errors are handled before this runs.
+   */
+  isError?: ActionErrorCheck;
 }
+
+export type ActionErrorCheck = (body: unknown, res: Response) => boolean | string | null | undefined;
 
 export interface ConfirmOptions {
   title?: string;
@@ -397,6 +404,8 @@ export interface ActionOptions {
   success?: string | false;
   reload?: false | { keepPage?: boolean; silent?: boolean };
   headers?: Record<string, string>;
+  /** overrides `configure({ isError })` / the grid's `host.isError` for this call */
+  isError?: ActionErrorCheck;
 }
 
 export interface GridStatus {

@@ -62,7 +62,7 @@ Modules attached later with `grid.use()` are set up immediately; their `ready` c
 | `root` | `HTMLElement` | The `.dg` wrapper. |
 | `table` | `HTMLTableElement` | The host table. |
 | `messages` | `Messages` | The grid's merged UI strings. Modules keep their own strings in a `messages` option. |
-| `host` | `HostAdapters` | Resolved host adapters (`confirm`, `notify`, `csrf`, `laravel`, `timeout`, `onSessionExpired`, `fetch`). |
+| `host` | `HostAdapters` | Resolved host adapters (`confirm`, `notify`, `csrf`, `laravel`, `timeout`, `onSessionExpired`, `fetch`, `isError`). |
 | `locale` | `string` | The grid's locale (`ctx.locale.startsWith("tr")` picks a language pack). |
 | `signal` | `AbortSignal` | Aborted when the grid is destroyed: `el.addEventListener("click", fn, { signal: ctx.signal })`. |
 | `on(type, fn)` | `() => void` | `grid.on`; returns the unsubscribe function. |

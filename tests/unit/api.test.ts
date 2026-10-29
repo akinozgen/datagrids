@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
-import { Datagrid, column, arraySource, customSource, configure, find, reload, upgrade, preset } from "../../src/index";
+import { Datagrid, column, arraySource, customSource, configure, config, find, reload, upgrade, preset } from "../../src/index";
 import type { Row } from "../../src/index";
 
 const flush = () => new Promise((r) => setTimeout(r, 0));
@@ -12,7 +12,10 @@ const rows: Row[] = [
   { id: 2, ad: "Chris Redfield", tutar: 20 },
 ];
 
-afterEach(() => configure({ notify: undefined, confirm: undefined, fetch: undefined, errorMode: "inline" }));
+// configure() skips undefined values: reset the adapters on the object itself
+afterEach(() => {
+  Object.assign(config, { notify: undefined, confirm: undefined, fetch: undefined, isError: undefined, errorMode: "inline" });
+});
 
 describe("delegate + render hook", () => {
   it("passes row context to delegated handlers", async () => {
@@ -62,6 +65,40 @@ describe("configure() host adapters", () => {
     const g = new Datagrid(t, { label: "x", columns: [column.text("ad")], use: [arraySource(rows)] });
     expect(await g.action("/x", { confirm: "?" })).toBeUndefined();
     expect(fetchMock).not.toHaveBeenCalled();
+    g.destroy();
+  });
+
+  it("isError: a 200 whose body reports a failure notifies the error, throws and does not reload", async () => {
+    const notify = vi.fn();
+    const json = (b: unknown) => new Response(JSON.stringify(b), { status: 200, headers: { "content-type": "application/json" } });
+    const fetchMock = vi.fn(async () => json({ status: false, error: "Grup kullanımda." }));
+    configure({ notify, fetch: fetchMock as unknown as typeof fetch, isError: (b) => (b as { status?: unknown }).status === false && ((b as { error?: string }).error || true) });
+    const t = mount();
+    const g = new Datagrid(t, { label: "x", columns: [column.text("ad")], use: [arraySource(rows)] });
+    await flush();
+    const loads = vi.fn();
+    g.on("load", loads);
+    await expect(g.action("/grup/1", { method: "DELETE" })).rejects.toMatchObject({ kind: "server", status: 200, message: "Grup kullanımda.", raw: { status: false, error: "Grup kullanımda." } });
+    expect(notify).toHaveBeenCalledWith("error", "Grup kullanımda.");
+    expect(notify).not.toHaveBeenCalledWith("success", expect.anything());
+    await flush();
+    expect(loads).not.toHaveBeenCalled();
+    // `true` uses the generic message; the per-call rule wins over the configured one
+    fetchMock.mockImplementation(async () => json({ ok: 0 }));
+    await expect(g.action("/x", { isError: (b) => (b as { ok: number }).ok === 0 })).rejects.toMatchObject({ message: "İşlem başarısız" });
+    fetchMock.mockImplementation(async () => json({ status: true, message: "Silindi." }));
+    await expect(g.action("/x")).resolves.toEqual({ status: true, message: "Silindi." });
+    expect(notify).toHaveBeenLastCalledWith("success", "Silindi.");
+    g.destroy();
+  });
+
+  it("without an isError rule a 200 body is a success (no built-in guessing)", async () => {
+    const notify = vi.fn();
+    configure({ notify, fetch: (async () => new Response(JSON.stringify({ status: false }), { status: 200, headers: { "content-type": "application/json" } })) as unknown as typeof fetch });
+    const t = mount();
+    const g = new Datagrid(t, { label: "x", columns: [column.text("ad")], use: [arraySource(rows)] });
+    await expect(g.action("/x", { reload: false })).resolves.toEqual({ status: false });
+    expect(notify).toHaveBeenCalledWith("success", "İşlem tamamlandı.");
     g.destroy();
   });
 

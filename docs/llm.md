@@ -237,7 +237,7 @@ Request middleware order: built-ins (X-Requested-With, CSRF) → `pre` → regis
 | `status()` | `{ status: "idle"\|"loading"\|"reloading"\|"ready"\|"error", loaded, total, filtered, hasMore, error }` |
 | `on(type, fn)` → unsubscribe; `emit(type, detail)` | DOM `dg:<type>` CustomEvents on `grid.root` too |
 | `delegate(type, selector, (e, { row, key, tr, td, column }) => …)` → unsubscribe | row-aware DOM events |
-| `action(url, { method:"POST", body, confirm, success, reload, headers })` | confirm → CSRF fetch → notify → `reload({keepPage:true})`; same-origin, method allow-list; a redirect to a non-login page = success, to a login page = `sessionexpired` |
+| `action(url, { method:"POST", body, confirm, success, reload, headers, isError })` | confirm → CSRF fetch → notify → `reload({keepPage:true})`; same-origin, method allow-list; a redirect to a non-login page = success, to a login page = `sessionexpired`; a 2xx body fails only via `isError(body, res)` (truthy, string = message) |
 | `notify(kind, msg)`, `confirm(msg, opts)` | host adapters, else live region / native `<dialog>` |
 | `batch(fn)` | several changes, no intermediate loads |
 | `use(module)`, `module(factory)` | typed module API access |
@@ -251,7 +251,7 @@ Request middleware order: built-ins (X-Requested-With, CSRF) → `pre` → regis
 `preset(name, (table) => modules)` · `en`, `tr` message packs · `VERSION`.
 
 `configure` keys: `confirm(msg, opts) → Promise<bool>`, `notify(kind, msg)`, `csrf` (false), `laravel` (true), `timeout`
-(30000), `onSessionExpired(err)`, `fetch`, `messages`, `locale`, `pageSize` (25), `pageSizes`, `maxPageSize` (1000),
+(30000), `onSessionExpired(err)`, `fetch`, `isError(body, res)` (action 2xx failure rule), `messages`, `locale`, `pageSize` (25), `pageSizes`, `maxPageSize` (1000),
 `warnings` (true), `errorMode` ("inline"). Read at grid creation, except `errorMode`, `maxPageSize`, `warnings` (read when needed, so they reach existing grids too).
 
 ## Events (complete)
