@@ -92,7 +92,7 @@ export interface BulkAction {
   /** permission flag: false → the button does not exist */
   can?: boolean;
   /** a returned promise keeps the bar's actions disabled until it settles */
-  onClick(payload: SelectionPayload, grid: DatagridApi, selection: SelectionApi): void | Promise<unknown>;
+  onClick(payload: SelectionPayload, grid: DatagridApi, selection: SelectionApi): void | PromiseLike<unknown>;
 }
 
 export interface SelectionOptions {

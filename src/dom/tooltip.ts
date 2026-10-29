@@ -95,6 +95,7 @@ export function installTips(root: HTMLElement, signal: AbortSignal): void {
   root.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && owner) hide();
   }, opts);
-  window.addEventListener("scroll", hide, { ...opts, capture: true, passive: true });
+  // a shown tip would detach from its control; a pending one checks :hover when it fires
+  window.addEventListener("scroll", () => owner && hide(), { ...opts, capture: true, passive: true });
   signal.addEventListener("abort", hide);
 }

@@ -266,7 +266,7 @@ describe("selection()", () => {
     let settle!: () => void;
     // what some dialog libraries return: only `then`
     const thenable = { then: (ok: () => void) => void (settle = ok) };
-    const onClick = vi.fn(() => thenable);
+    const onClick = vi.fn(() => thenable as unknown as PromiseLike<void>);
     const { t, g } = await make({ bulk: { actions: [{ id: "sil", label: "Sil", onClick }] } });
     const btn = g.root.querySelector<HTMLButtonElement>(".dg-bulk-actions .dg-btn")!;
     rowInputs(t)[0]!.click();
