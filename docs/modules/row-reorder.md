@@ -42,6 +42,9 @@ const grid = new Datagrid("#patrols", {
 
 - **Moving is allowed** while the grid is unsorted or sorted by `orderKey`. Sorted by any other
   column, the grips are disabled and explain why ("Sort by “#” to move rows").
+- **Not while rows are hidden:** a search or an active filter (`grid.filters()`) turns the grips off
+  ("Clear the search and filters to move rows"). The order of a partial list would say nothing
+  about the hidden rows, and `onEnd` would save it as if it did.
 - **Client grids**: the row moves in the data at once; while sorted by `orderKey`, the order
   values of the touched rows are renumbered. **Server grids**: the row moves on screen, and the
   page reloads (keeping the page) after `onEnd` resolves — the server's order is the truth.
@@ -60,7 +63,7 @@ neighbours, which is all a "place between" endpoint needs.
 | `orderKey` | `string` | none | Column key that stands for the stored order (moving is allowed while sorted by it). |
 | `handle` | `string` | `reorderColumn()`, else the first visible data column | Column that holds the grip. |
 | `label` | `(row) => string` | the first text column's value | Row name in the grip's name and the announcements. |
-| `messages` | `Partial<RowReorderMessages>` | locale (`en` / `tr`) | Grip name, instructions, announcements, the "sorted" reason, save errors. |
+| `messages` | `Partial<RowReorderMessages>` | locale (`en` / `tr`) | Grip name, instructions, announcements, the `sorted` / `filtered` / `virtual` reasons, save errors. |
 | `can` | `boolean` | `true` | Permission flag: `false` → no grips. |
 
 `reorderColumn(options?)` creates the grip column: narrow, not sortable, searchable, exportable or
@@ -72,7 +75,7 @@ Available as `grid.rowReorder` (typed: `grid.module(rowReorder)`).
 
 | Member | Returns | Description |
 |---|---|---|
-| `enabled()` | `boolean` | `true` while grips are active (not sorted by another column, nothing saving). |
+| `enabled()` | `boolean` | `true` while grips are active (no search or filter, not sorted by another column, nothing saving). |
 | `move(key, to)` | `Promise<boolean>` | Moves a row of the current page to index `to`, through the same path as a drag. |
 
 ## Events
@@ -104,8 +107,8 @@ Available as `grid.rowReorder` (typed: `grid.module(rowReorder)`).
 
 ## Gotchas
 
-- **The grips are greyed out.** The grid is sorted by another column; sort by `orderKey` (or
-  clear the sort).
+- **The grips are greyed out.** The grid is sorted by another column (sort by `orderKey` or clear
+  the sort), or a search or filter is active (clear it). The grip's tooltip names the reason.
 - **Rows only move within the page.** Moves are page-local; raise the page size for long manual
   orderings.
 - **The order jumped back after the save on a server grid.** The reload shows the server's order:

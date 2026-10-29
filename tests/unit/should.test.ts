@@ -94,6 +94,30 @@ describe("rowReorder: handles", () => {
     expect(handle(t, 0).hasAttribute("aria-disabled")).toBe(false);
   });
 
+  it("disabled while a search or filter hides rows: the order of a partial list is never saved", async () => {
+    const t = mkTable();
+    const onEnd = vi.fn();
+    const g = grid(t, { columns: reorderCols(), sort: [["sira", "asc"]], use: [arraySource(crew()), rowReorder({ orderKey: "sira", onEnd })] });
+    await flush();
+    g.search("Jill");
+    await flush();
+    expect(api(g).enabled()).toBe(false);
+    expect(handle(t, 0).getAttribute("aria-disabled")).toBe("true");
+    expect(handle(t, 0).getAttribute("data-dg-tip")).toBe("Taşımak için aramayı ve filtreleri temizleyin");
+    expect(await api(g).move(g.keyOf(g.viewRows()[0]!), 0)).toBe(false);
+    g.search("");
+    await flush();
+    expect(api(g).enabled()).toBe(true);
+    expect(handle(t, 0).hasAttribute("aria-disabled")).toBe(false);
+    g.filters({ birim: "Bravo" });
+    await flush();
+    expect(api(g).enabled()).toBe(false);
+    g.filters({ birim: null });
+    await flush();
+    expect(api(g).enabled()).toBe(true);
+    expect(onEnd).not.toHaveBeenCalled();
+  });
+
   it("without orderKey any sort disables", async () => {
     const t = mkTable();
     const g = grid(t, { columns: reorderCols(), use: [arraySource(crew()), rowReorder({ onEnd: () => {} })] });

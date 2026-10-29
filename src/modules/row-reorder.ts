@@ -19,6 +19,8 @@ export interface RowReorderMessages {
   cancelled: (label: string, pos: number, n: number) => string;
   /** disabled reason while sorted by another column (`column` = the order column's title, if any) */
   sorted: (column: string | null) => string;
+  /** reason shown while a search or filter hides rows (the order would be saved from a partial list) */
+  filtered: string;
   /** reason shown on the handles of a windowed (virtual) page */
   virtual: string;
   saving: string;
@@ -35,6 +37,7 @@ const tr: RowReorderMessages = {
   dropped: (l, p, n) => `${l} bırakıldı, konum ${p} / ${n}.`,
   cancelled: (l, p, n) => `Taşıma iptal edildi. ${l}: konum ${p} / ${n}.`,
   sorted: (c) => (c ? `Taşımak için “${c}” sıralamasına dönün` : "Sıralı görünümde satırlar taşınamaz"),
+  filtered: "Taşımak için aramayı ve filtreleri temizleyin",
   virtual: "Çok satırlı sayfada taşıma kapalı; sayfa boyunu küçültün",
   saving: "Sıra kaydediliyor…",
   failed: (d) => (d ? `Sıra kaydedilemedi: ${d}` : "Sıra kaydedilemedi."),
@@ -49,10 +52,13 @@ const en: RowReorderMessages = {
   dropped: (l, p, n) => `${l} dropped, position ${p} of ${n}.`,
   cancelled: (l, p, n) => `Move cancelled. ${l}: position ${p} of ${n}.`,
   sorted: (c) => (c ? `Sort by “${c}” to move rows` : "Rows cannot be moved while sorted"),
+  filtered: "Clear the search and filters to move rows",
   virtual: "Moving is off on very long pages; use a smaller page size",
   saving: "Saving order…",
   failed: (d) => (d ? `Could not save the order: ${d}` : "Could not save the order."),
 };
+
+const set = (v: unknown) => v != null && v !== "" && !(Array.isArray(v) && v.length === 0);
 
 /** What `onEnd` receives. Indices are zero-based inside the current view (page). */
 export interface RowReorderEnd {
@@ -84,7 +90,7 @@ export interface RowReorderOptions {
 }
 
 export interface RowReorderApi {
-  /** true while handles are active (not sorted by another column, nothing saving) */
+  /** true while handles are active (no search or filter, not sorted by another column, nothing saving) */
   enabled(): boolean;
   /** moves a row of the current view to `to` (zero-based) through the same path as a drag */
   move(key: string, to: number): Promise<boolean>;
@@ -192,6 +198,9 @@ export function rowReorder(opts: RowReorderOptions): ModuleDef<"rowReorder", Row
         if (saving) return m.saving;
         // a windowed page recycles rows under the pointer: no moves there
         if (ctx.root.hasAttribute("data-dg-virtual")) return m.virtual;
+        // a filtered view is a partial list: its order says nothing about the hidden rows
+        const q = grid.query();
+        if (q.search.trim() || Object.values(q.filters).some(set)) return m.filtered;
         const s = grid.sort()[0];
         if (!s || (opts.orderKey && s.key === opts.orderKey)) return null;
         const col = opts.orderKey ? grid.columns().find((c) => c.key === opts.orderKey) : undefined;
