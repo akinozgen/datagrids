@@ -70,7 +70,7 @@ export function upgrade(root: ParentNode = document): Datagrid[] {
   return out;
 }
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.1.1";
 export { config };
 export { columnFilters, type ColumnFilterValue, type FilterOp } from "./modules/column-filters";
 export { filterPanel } from "./modules/filter-panel";
