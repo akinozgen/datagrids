@@ -130,6 +130,7 @@ banner above the table.
 |---|---|---|---|
 | `items` | `ActionItem[]` | — (required) | The actions, in display order. |
 | `inline` | `number` | `2` | Up to this many visible actions render inline; more switch to primary + menu. |
+| `buttonGroup` | `boolean` | `true` | Inline actions (and primary + `⋯`) form one joined button group. Items that can turn disabled keep room for their ⓘ, so the groups line up from row to row. `false`: separate buttons. |
 | `sticky` | `"end" \| false` | `"end"` | `false` lets the actions column scroll with the others. |
 | `field` | `string` | none | Row field with a permission map (array of ids or `{ id: true \| false \| { disabled: code } }`). |
 | `reasons` | `Record<string, string>` | `{}` | Reason codes from the map → text. |

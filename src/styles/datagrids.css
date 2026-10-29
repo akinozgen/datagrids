@@ -707,6 +707,15 @@ table.dg-table {
 .dg-cellbtn:disabled,
 .dg-cellbtn[aria-disabled="true"] { background: var(--dg-muted); border-color: var(--dg-line); color: var(--dg-muted-fg); cursor: not-allowed; }
 .dg-actions { display: inline-flex; gap: calc(0.25 * var(--dg-u)); vertical-align: top; }
+/* bitişik grup (buttonGroup, varsayılan): tek parça, iç kenarlar paylaşılır; ⓘ yeri ayrıldığından satırlar hizalı */
+.dg-actions[data-group] { gap: 0; }
+:where(.dg-actions[data-group]) > .dg-cellbtn { border-radius: 0; }
+:where(.dg-actions[data-group]) > .dg-cellbtn + .dg-cellbtn { margin-inline-start: -1px; }
+:where(.dg-actions[data-group]) > .dg-cellbtn:first-child { border-start-start-radius: var(--dg-radius-sm); border-end-start-radius: var(--dg-radius-sm); }
+:where(.dg-actions[data-group]) > .dg-cellbtn:last-child { border-start-end-radius: var(--dg-radius-sm); border-end-end-radius: var(--dg-radius-sm); }
+:where(.dg-actions[data-group]) > .dg-cellbtn[aria-disabled="true"] { border-color: var(--dg-border); }
+:where(.dg-actions[data-group]) > .dg-cellbtn:is(:hover, :focus-visible, [aria-expanded="true"]) { position: relative; z-index: 1; }
+.dg-why-slot { flex: none; visibility: hidden; }
 
 /* ---------- HÜCRE PRİMİTİFLERİ (core) ---------- */
 /* Biçimlenmiş değer tek yalıtılmış öbek: RTL'de tarih+saat ve tutar+para birimi bölünmez */
@@ -1213,9 +1222,10 @@ table.dg-table {
   clip-path: inset(50%);
   white-space: nowrap;
 }
-/* dar kökte hücre butonu yalnız ikon (sona yapışık kolon dar kalsın); etiket title/aria-label'da */
-.dg[data-bp="xs"] .dg-cellbtn > span { display: none; }
-.dg[data-bp="xs"] .dg-cellbtn { inline-size: var(--dg-cell-btn-h); padding: 0; justify-content: center; }
+/* dar kökte ikonlu hücre butonu yalnız ikon (sona yapışık kolon dar kalsın); ad aria-label'da.
+   İkonsuz buton metnini korur: boş kutu kalmaz */
+:where(.dg[data-bp="xs"]) .dg-cellbtn[data-has-icon] > span { display: none; }
+:where(.dg[data-bp="xs"]) .dg-cellbtn[data-has-icon] { inline-size: var(--dg-cell-btn-h); padding: 0; justify-content: center; }
 
 /* ---------- HAREKET AZALTMA ---------- */
 @media (prefers-reduced-motion: reduce) {

@@ -58,7 +58,7 @@ end-to-end tests. Internal custom properties (`--dg-_*`) and undocumented elemen
         <tbody>
           <tr data-key="1001" data-selected data-tone="ok|warn|bad|info|muted" aria-busy="true" data-clickable>
             <td data-key="amount" data-align="end"><span class="dg-money">12,450.00<span class="dg-money-cur">$</span></span></td>
-            <td data-col="actions" data-sticky="end"><span class="dg-actions">…</span></td>
+            <td data-col="actions" data-sticky="end"><span class="dg-actions" data-group>…</span></td>  <!-- data-group: buttonGroup (default) -->
           </tr>
           <tr class="dg-state-row"><td colspan="N"><div class="dg-state" data-kind="loading|empty|error|manual">…</div></td></tr>
         </tbody>

@@ -31,6 +31,8 @@ export interface ActionsOptions<R = Row> {
   items: ActionItem<R>[];
   /** how many actions render inline before switching to primary + ⋯ (default 2) */
   inline?: number;
+  /** inline actions as one joined button group, aligned across rows (default true); false = separate buttons */
+  buttonGroup?: boolean;
   sticky?: "end" | false;
   /** optional server permission map field (only narrows); `{edit:true, delete:{disabled:"code"}, sms:false}` or `["edit"]` */
   field?: string;
@@ -80,6 +82,7 @@ export function actions<R = Row>(opts: ActionsOptions<R>): AnyModule {
       const grid = ctx.grid;
       const m = { ...MSG[ctx.locale.startsWith("tr") ? "tr" : "en"], ...(opts.messages ?? {}) };
       const inline = opts.inline ?? 2;
+      const grouped = opts.buttonGroup !== false;
       const busy = new Set<string>();
       const menu: Panel = createPanel(ctx.root, { role: "menu" });
       const note: Panel = createPanel(ctx.root, { class: "dg-note", role: "note" });
@@ -147,7 +150,9 @@ export function actions<R = Row>(opts: ActionsOptions<R>): AnyModule {
           "data-variant": it.tone === "danger" ? "danger" : null,
           "aria-disabled": r.reason !== null ? "true" : null,
           "data-dg-tip": labelled ? null : it.label,
-          "aria-label": labelled ? null : it.label,
+          // narrow roots hide the text of buttons that have an icon: the name must not go with it
+          "aria-label": labelled && !it.icon ? null : it.label,
+          "data-has-icon": it.icon ? "" : null,
         });
         if (it.icon) b.append(iconEl(it.icon));
         if (labelled) b.append(h("span", null, it.label));
@@ -155,6 +160,9 @@ export function actions<R = Row>(opts: ActionsOptions<R>): AnyModule {
           b.append(frag(icons.info));
           (b.lastElementChild as SVGElement).classList.add("dg-why");
           if (r.reason) b.setAttribute("aria-description", r.reason);
+        } else if (grouped && labelled && (it.disabled || opts.field)) {
+          // keeps the width of the ⓘ another row may show: the group lines up from row to row
+          b.append(h("span", { class: "dg-why dg-why-slot", "aria-hidden": "true" }));
         }
         b.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -184,7 +192,7 @@ export function actions<R = Row>(opts: ActionsOptions<R>): AnyModule {
           td.append(h("span", { class: "dg-empty-value" }, "—"));
           return;
         }
-        const box = h("span", { class: "dg-actions" });
+        const box = h("span", { class: "dg-actions", "data-group": grouped ? "" : null });
         if (list.length <= inline) {
           for (const r of list) box.append(cellButton(r, row, key));
         } else {
@@ -198,6 +206,7 @@ export function actions<R = Row>(opts: ActionsOptions<R>): AnyModule {
             "aria-label": primary ? `${m.more}: ${labelOf(row)}` : m.forRow(labelOf(row)),
             "data-dg-tip": primary ? m.more : null,
             "data-icon-only": primary ? true : null,
+            "data-has-icon": "",
           });
           if (primary) trig.append(frag(icons.more));
           else {
