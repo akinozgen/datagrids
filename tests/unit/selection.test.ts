@@ -381,4 +381,43 @@ describe("select all matching carries page params", () => {
       configure({ fetch: undefined });
     }
   });
+
+  it("lastRequestParams() is the wire's own page data: `data` additions and non-column filters included, protocol fields left out", async () => {
+    const { Datagrid, column, serverSide, yajra, config, selection } = await import("../../src/index");
+    let bodies: URLSearchParams[] = [];
+    config.fetch = (async (_u: RequestInfo | URL, init?: RequestInit) => {
+      const b = new URLSearchParams(String(init?.body ?? ""));
+      bodies.push(b);
+      const data = Array.from({ length: 5 }, (_, i) => ({ id: i + 1, ad: `Kişi ${i + 1}` }));
+      return new Response(JSON.stringify({ draw: Number(b.get("draw")), recordsTotal: 50, recordsFiltered: 50, data }), { headers: { "Content-Type": "application/json" } });
+    }) as typeof fetch;
+    try {
+      let bayi = "7";
+      document.body.innerHTML = "<table id='t'></table>";
+      const g = new Datagrid("#t", {
+        columns: [column.select(), column.text("ad")],
+        pageSize: 5,
+        // the DataTables `ajax.data` habit: filters added to the wire object in place
+        use: [serverSide({ url: "/x", protocol: yajra({ data: (d: Record<string, unknown>) => void (d.f_bayi = bayi) }), params: { tur: "personel" } }), selection()],
+      });
+      await new Promise((r) => setTimeout(r, 10));
+      expect(g.lastRequestParams()).toEqual({ tur: "personel", f_bayi: "7" });
+      g.filters({ doluluk: "dolu" });
+      await new Promise((r) => setTimeout(r, 10));
+      expect(bodies.at(-1)!.get("doluluk")).toBe("dolu");
+      expect(g.lastRequestParams()).toEqual({ doluluk: "dolu", tur: "personel", f_bayi: "7" });
+      const sel = (g as unknown as { selection: { selectPage(): void; selectAllMatching(): void; payload(): { all: boolean; query?: { params?: unknown } } } }).selection;
+      sel.selectPage();
+      sel.selectAllMatching();
+      expect(sel.payload().query!.params).toEqual({ doluluk: "dolu", tur: "personel", f_bayi: "7" });
+      // a filter that lives only in `data` changes: "all" no longer describes the rows on screen
+      bayi = "9";
+      await g.reload({ keepPage: true });
+      await new Promise((r) => setTimeout(r, 10));
+      expect(sel.payload().all).toBe(false);
+      g.destroy();
+    } finally {
+      config.fetch = undefined;
+    }
+  });
 });

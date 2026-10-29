@@ -179,7 +179,7 @@ configure({
 
 ## Writing your own protocol
 
-A protocol is an object with `name`, `cells`, `encode(req, query, grid)` → `{ url, init }` and
+A protocol is an object with `name`, `cells`, `encode(req, query, grid)` → `{ url, init, params? }` and
 `decode(body, query, grid)` → `{ rows, total, filtered, hasMore?, meta? }`. The transport keeps doing
 CSRF, headers, abort, timeout and error handling for you. `grid` is the grid the request belongs to
 (keep per-grid state, such as cursors, in a `WeakMap` keyed by it). Optional fields:
@@ -192,6 +192,12 @@ CSRF, headers, abort, timeout and error handling for you. `grid` is the grid the
 
 To send a server default order when the sort is empty, check `query.sortDefault` in `encode`: it is
 `false` only when the grid was created with `sort: []`.
+
+`encode` may also return `params`: the page parameters that actually reached the wire beyond the
+protocol's own fields. `grid.lastRequestParams()` (and with it the "all matching" payload of
+[selection](/modules/selection)) reports them; without it, the request's `params` are reported. The
+built-in `ssp` / `yajra` return everything on the top level except `draw`, `columns`, `order`,
+`start`, `length` and `search`, so additions of a `data` function count too.
 
 ## Related
 

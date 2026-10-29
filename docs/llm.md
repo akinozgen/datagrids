@@ -147,7 +147,7 @@ number/money/date format with the grid `locale` (money in `TRY`) unless the colu
 Protocols: `ssp({ data, dataSrc, cells:"text", method:"GET", allowAll:false })`, `yajra(same)` (= ssp with
 `cells:"html"`, `method:"POST"`), `laravelPaginator({ query:{page,perPage,sort,search,cursor}, sortFormat:"-key"|"key:dir" })`,
 `dgp({ method:"POST", count:"exact"|"estimate"|"none" })`. Custom protocol: `{ name, cells, method?, allowAll?,
-encode(req, query, grid) → { url, init }, decode(body, query, grid) → LoadResult }`.
+encode(req, query, grid) → { url, init, params? }, decode(body, query, grid) → LoadResult }` (`params` = page params that reached the wire, for `lastRequestParams()`).
 
 Transport adds `X-Requested-With: XMLHttpRequest` (unless `laravel:false`), CSRF (`X-CSRF-TOKEN` from
 `meta[name=csrf-token]` + `_token` in non-GET form bodies) when `csrf`, timeout 30 s, abort (latest wins,
@@ -232,7 +232,7 @@ Request middleware order: built-ins (X-Requested-With, CSRF) → `pre` → regis
 | `rows()`, `viewRows()`, `keyOf(row)`, `rowByKey(key)` | |
 | `setData(rows)`, `addRows(rows, {keepPage})`, `removeRow(key)`, `refreshRow(key, row?)` | client mode (refreshRow/removeRow also server; addRows is ignored in server mode); `reload()` keeps these edits on array/DOM sources |
 | `lastResponse()` | raw JSON of the last response |
-| `lastRequestParams()` | page params (filter panel, toggles, `params`) of the request behind the rows on screen; `_token` excluded |
+| `lastRequestParams()` | page params of the request behind the rows on screen, as sent: filter panel, toggles, `params`, non-column filters and (ssp/yajra) `data` additions; protocol fields and `_token` excluded |
 | `exportRows("page"\|"all")` | |
 | `status()` | `{ status: "idle"\|"loading"\|"reloading"\|"ready"\|"error", loaded, total, filtered, hasMore, error }` |
 | `on(type, fn)` → unsubscribe; `emit(type, detail)` | DOM `dg:<type>` CustomEvents on `grid.root` too |

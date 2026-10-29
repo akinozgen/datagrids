@@ -31,7 +31,7 @@ await grid.reload();
 | `refreshRow(key, row?)` | `void` | Re-renders one row in place, optionally replacing its data object first. Row mutators run again. |
 | `exportRows(scope?)` | `Promise<Row[]>` | Rows for an export. `"page"` (default): the current view. `"all"`: every filtered row; client mode computes them locally, server mode sends one request with `pageSize = maxPageSize` (request middleware included). |
 | `lastResponse()` | `unknown` | Raw JSON body of the last load (server sources and `fetchAll`); `null` for array and DOM sources. |
-| `lastRequestParams()` | `object` | Page parameters (filter panel, toggles, `params`) of the request behind the rows on screen, after every middleware; `_token` left out. `{}` for local sources. Use it to rebuild "all matching" on the server. |
+| `lastRequestParams()` | `object` | Page parameters of the request behind the rows on screen, as they reached the wire: filter panel, toggles, `params`, after every middleware. With `ssp` / `yajra` also non-column `filters()` and whatever a `data` function added; the protocol's own fields (`draw`, `columns`, `order`, `start`, `length`, `search`) and `_token` are left out. `{}` for local sources. Use it to rebuild "all matching" on the server. |
 
 ## State: getters and setters
 

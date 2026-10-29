@@ -369,7 +369,7 @@ export interface DatagridApi {
   setColumnVisible(key: string, visible: boolean): void;
   /** display order of column keys; special and sticky columns keep their slots */
   columnOrder(keys?: readonly string[]): string[];
-  /** page parameters of the request behind the rows on screen (`_token` excluded) */
+  /** page parameters of the request behind the rows on screen, as sent (protocol fields and `_token` excluded) */
   lastRequestParams(): Record<string, unknown>;
   filters(patch?: Record<string, unknown>): Readonly<Record<string, unknown>>;
   query(): Query;

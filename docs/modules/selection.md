@@ -63,8 +63,10 @@ Bulk actions receive what the selection stands for, never a huge list of loaded 
 
 `query.params` holds the page parameters of the request behind the rows on screen when "all
 matching" was chosen (the same as `grid.lastRequestParams()`): [filterPanel](/modules/filter-panel)
-values, the [softDeletes](/modules/soft-deletes) flag, the source's `params`. The CSRF token and
-the [lazyColumns](/modules/lazy-columns) parameter are left out.
+values, the [softDeletes](/modules/soft-deletes) flag, the source's `params` and, with `ssp` /
+`yajra`, non-column filters and the additions of a `data` function. The CSRF token and the
+[lazyColumns](/modules/lazy-columns) parameter are left out. A change of any of them clears an "all
+matching" selection.
 
 With `all: true`, the endpoint re-runs the query and skips `except`:
 

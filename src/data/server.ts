@@ -19,7 +19,11 @@ export interface Protocol {
   /** column filter operators the wire can carry (omitted: all); the filter UI offers only these */
   readonly filterOps?: readonly string[];
   /** `grid` is the grid the request belongs to (per-grid protocol state, e.g. cursor maps) */
-  encode(req: WireRequest, q: Query, grid?: DatagridApi): { url: string; init: RequestInit };
+  /**
+   * `params`: the top-level wire fields beyond the protocol's own (what `grid.lastRequestParams()`
+   * reports); omitted = the request's `params`
+   */
+  encode(req: WireRequest, q: Query, grid?: DatagridApi): { url: string; init: RequestInit; params?: Record<string, unknown> };
   decode(body: unknown, q: Query, grid?: DatagridApi): LoadResult;
 }
 
@@ -107,9 +111,9 @@ export function serverSide(o: ServerSideOptions): ServerSideModule {
       const doFetch = o.fetch ?? ctx.host.fetch ?? ((...a: Parameters<typeof fetch>) => globalThis.fetch(...a));
       let sent: Record<string, unknown> = {};
       const final = (r: WireRequest) => {
-        sent = { ...r.params };
+        const { url, init, params } = o.protocol.encode(r, query, ctx.grid);
+        sent = { ...(params ?? r.params) };
         delete sent._token;
-        const { url, init } = o.protocol.encode(r, query, ctx.grid);
         return doFetch(url, { ...init, signal: timeoutSignal(ctx.signal, timeout), credentials: "same-origin" });
       };
       const dispatch = (i: number, r: WireRequest): Promise<Response> => {
@@ -191,6 +195,13 @@ const toInt = (v: unknown): number | null => {
   return Number.isFinite(n) ? n : null;
 };
 
+/** Fields of the classic wire itself; everything else on the top level is a page parameter. */
+const SSP_OWN = new Set(["draw", "columns", "order", "start", "length", "search"]);
+
+// what reached the wire after `data` (non-column filters, `data` additions); a string body is opaque
+const pageParams = (d: unknown) =>
+  typeof d === "string" || !d ? undefined : Object.fromEntries(Object.entries(d as Record<string, unknown>).filter(([k]) => !SSP_OWN.has(k)));
+
 /** Builds the DataTables 1.10 server-side parameter object (wire order kept). */
 export function sspParams(q: Query, draw: number, params: Record<string, unknown>): Record<string, unknown> {
   const cols = q.columns;
@@ -257,10 +268,10 @@ export function ssp(o: SspOptions = {}): Protocol {
       if (req.method.toUpperCase() === "GET") {
         const qs = typeof d === "string" ? d : encodeForm(d);
         const sep = req.url.includes("?") ? "&" : "?";
-        return { url: `${req.url}${sep}${qs}${qs ? "&" : ""}_=${Date.now()}`, init: { method: "GET", headers } };
+        return { url: `${req.url}${sep}${qs}${qs ? "&" : ""}_=${Date.now()}`, init: { method: "GET", headers }, params: pageParams(d) };
       }
       headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8";
-      return { url: req.url, init: { method: req.method.toUpperCase(), headers, body: typeof d === "string" ? d : formBody(d) } };
+      return { url: req.url, init: { method: req.method.toUpperCase(), headers, body: typeof d === "string" ? d : formBody(d) }, params: pageParams(d) };
     },
     decode(body) {
       const json = (body ?? {}) as Record<string, unknown>;
